@@ -2,89 +2,27 @@
 
 import VideoCard from "./VideoCard";
 import { useState } from "react";
+import rawVideos from '../data/videos.json'
 
-type Video = {
-    thumbnail: string;
-    link: string;
+export interface RawVideo {
     title: string;
+    youtubeId: string;
     category: string;
     tags: string[];
-};
+}
+
+export interface Video extends RawVideo {
+    thumbnail: string;
+    link: string;
+}
 
 type SortOption = "title-asc" | "title-desc" | "category-asc" | "category-desc";
 
-const videos: Video[] = [
-    // Nature
-    { 
-        thumbnail: "https://img.youtube.com/vi/1HZ0U9ZJ2_0/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1HZ0U9ZJ2_0",
-        title: "Rain Sounds For Sleeping",
-        category: "nature",
-        tags: ["rain", "sleep", "relaxation", "nature"]
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/nMfPqeZjc2c/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=nMfPqeZjc2c",
-        title: "Ocean Waves for Sleeping",
-        category: "nature",
-        tags: ["ocean", "waves", "beach", "sleep"]
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/3yJoXf9hqXk/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=3yJoXf9hqXk",
-        title: "Forest Stream Sounds",
-        category: "nature",
-        tags: ["forest", "stream", "nature", "relaxation"]
-    },
-    // Night City
-    { 
-        thumbnail: "https://img.youtube.com/vi/bNmP4NsYgRI/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=bNmP4NsYgRI",
-        title: "Night City Ambience",
-        category: "night-city",
-        tags: ["city", "night", "ambience", "urban"]
-    },
-    // Cafe
-    { 
-        thumbnail: "https://img.youtube.com/vi/jfKfPfyJRdk/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
-        title: "Cafe Ambience with Jazz",
-        category: "cafe",
-        tags: ["cafe", "jazz", "ambience", "coffee"]
-    },
-    // Reading
-    { 
-        thumbnail: "https://img.youtube.com/vi/7NOSDKb0HlU/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=7NOSDKb0HlU",
-        title: "Cozy Reading Ambience",
-        category: "reading",
-        tags: ["reading", "cozy", "ambience", "study"]
-    },
-    // Meditation
-    { 
-        thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "Meditation Music",
-        category: "meditation",
-        tags: ["meditation", "breathing", "calm", "zen"]
-    },
-    // ASMR
-    { 
-        thumbnail: "https://img.youtube.com/vi/4Y1lZQsyuSQ/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=4Y1lZQsyuSQ",
-        title: "ASMR Visual Scenes",
-        category: "asmr",
-        tags: ["asmr", "visual", "relaxation", "satisfying"]
-    },
-    // Sleep
-    { 
-        thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "Sleep Music",
-        category: "sleep",
-        tags: ["sleep", "relaxation", "night", "calm"]
-    }
-];
+const videos: Video[] = (rawVideos as RawVideo[]).map(video => ({
+    ...video,
+    thumbnail: `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`,
+    link:      `https://www.youtube.com/watch?v=${video.youtubeId}`
+}));
 
 const categories = [
     { id: "all", name: "All Videos", icon: "🎥" },
@@ -285,9 +223,9 @@ const VideoGrid = () => {
                 {/* Video Grid */}
                 <div className="container mx-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {filteredVideos.map((video, i) => (
+                        {filteredVideos.map((video) => (
                             <VideoCard 
-                                key={i} 
+                                key={video.youtubeId}
                                 thumbnail={video.thumbnail} 
                                 link={video.link}
                                 title={video.title}
