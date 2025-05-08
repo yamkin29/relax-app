@@ -1,8 +1,7 @@
-// app/page.tsx
 'use client'
 import React, { useState } from "react";
 import Header from "@/components/Header";
-import VideoGrid from "@/components/VideoGrid";
+import VideoGrid from "@/components/videoGrid/VideoGrid";
 import Channels from "@/components/Channels";
 
 type Tab = 'videos' | 'channels' | 'other';

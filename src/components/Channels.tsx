@@ -16,7 +16,6 @@ interface Channel {
 }
 
 const Channels: React.FC = () => {
-    // This would be replaced with actual data from your backend
     const channels: Channel[] = [
         {
             id: '1',
@@ -37,7 +36,6 @@ const Channels: React.FC = () => {
                 }
             ]
         },
-        // Add more channels as needed
     ];
 
     return (
