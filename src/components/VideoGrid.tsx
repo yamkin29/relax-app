@@ -8,121 +8,93 @@ type Video = {
     link: string;
     title: string;
     category: string;
+    tags: string[];
 };
 
 type SortOption = "title-asc" | "title-desc" | "category-asc" | "category-desc";
 
 const videos: Video[] = [
-    // Ambient Music
-    { 
-        thumbnail: "https://img.youtube.com/vi/bNmP4NsYgRI/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=bNmP4NsYgRI",
-        title: "Ambient Outpost - Relaxing Ambient Music",
-        category: "ambient"
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "Relaxing Music for Stress Relief",
-        category: "ambient"
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/4Y1lZQsyuSQ/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=4Y1lZQsyuSQ",
-        title: "Calm Piano Music",
-        category: "ambient"
-    },
-    // Lofi
-    { 
-        thumbnail: "https://img.youtube.com/vi/jfKfPfyJRdk/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
-        title: "lofi hip hop radio - beats to relax/study to",
-        category: "lofi"
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/7NOSDKb0HlU/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=7NOSDKb0HlU",
-        title: "Jazz Hip Hop Mix - Beats to Relax/Study",
-        category: "lofi"
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/jfKfPfyJRdk/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
-        title: "lofi hip hop radio - beats to sleep/chill to",
-        category: "lofi"
-    },
-    // Nature Sounds
+    // Nature
     { 
         thumbnail: "https://img.youtube.com/vi/1HZ0U9ZJ2_0/maxresdefault.jpg", 
         link: "https://www.youtube.com/watch?v=1HZ0U9ZJ2_0",
-        title: "Rain Sounds For Sleeping - 99% Instantly Fall Asleep",
-        category: "nature"
+        title: "Rain Sounds For Sleeping",
+        category: "nature",
+        tags: ["rain", "sleep", "relaxation", "nature"]
     },
     { 
         thumbnail: "https://img.youtube.com/vi/nMfPqeZjc2c/maxresdefault.jpg", 
         link: "https://www.youtube.com/watch?v=nMfPqeZjc2c",
         title: "Ocean Waves for Sleeping",
-        category: "nature"
+        category: "nature",
+        tags: ["ocean", "waves", "beach", "sleep"]
     },
     { 
         thumbnail: "https://img.youtube.com/vi/3yJoXf9hqXk/maxresdefault.jpg", 
         link: "https://www.youtube.com/watch?v=3yJoXf9hqXk",
         title: "Forest Stream Sounds",
-        category: "nature"
+        category: "nature",
+        tags: ["forest", "stream", "nature", "relaxation"]
     },
+    // Night City
     { 
-        thumbnail: "https://img.youtube.com/vi/nMfPqeZjc2c/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=nMfPqeZjc2c",
-        title: "Thunderstorm Sounds",
-        category: "nature"
+        thumbnail: "https://img.youtube.com/vi/bNmP4NsYgRI/maxresdefault.jpg", 
+        link: "https://www.youtube.com/watch?v=bNmP4NsYgRI",
+        title: "Night City Ambience",
+        category: "night-city",
+        tags: ["city", "night", "ambience", "urban"]
     },
+    // Cafe
     { 
-        thumbnail: "https://img.youtube.com/vi/3yJoXf9hqXk/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=3yJoXf9hqXk",
-        title: "Mountain Stream",
-        category: "nature"
+        thumbnail: "https://img.youtube.com/vi/jfKfPfyJRdk/maxresdefault.jpg", 
+        link: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
+        title: "Cafe Ambience with Jazz",
+        category: "cafe",
+        tags: ["cafe", "jazz", "ambience", "coffee"]
     },
+    // Reading
     { 
-        thumbnail: "https://img.youtube.com/vi/1HZ0U9ZJ2_0/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1HZ0U9ZJ2_0",
-        title: "Forest Night Sounds",
-        category: "nature"
+        thumbnail: "https://img.youtube.com/vi/7NOSDKb0HlU/maxresdefault.jpg", 
+        link: "https://www.youtube.com/watch?v=7NOSDKb0HlU",
+        title: "Cozy Reading Ambience",
+        category: "reading",
+        tags: ["reading", "cozy", "ambience", "study"]
     },
     // Meditation
     { 
         thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
         link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
         title: "Meditation Music",
-        category: "meditation"
-    },
-    { 
-        thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "Relaxing Music for Deep Sleep",
-        category: "meditation"
+        category: "meditation",
+        tags: ["meditation", "breathing", "calm", "zen"]
     },
     // ASMR
     { 
-        thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
-        link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "ASMR Rain Sounds",
-        category: "asmr"
+        thumbnail: "https://img.youtube.com/vi/4Y1lZQsyuSQ/maxresdefault.jpg", 
+        link: "https://www.youtube.com/watch?v=4Y1lZQsyuSQ",
+        title: "ASMR Visual Scenes",
+        category: "asmr",
+        tags: ["asmr", "visual", "relaxation", "satisfying"]
     },
+    // Sleep
     { 
         thumbnail: "https://img.youtube.com/vi/1ZYbU82GVz4/maxresdefault.jpg", 
         link: "https://www.youtube.com/watch?v=1ZYbU82GVz4",
-        title: "ASMR Ocean Waves",
-        category: "asmr"
+        title: "Sleep Music",
+        category: "sleep",
+        tags: ["sleep", "relaxation", "night", "calm"]
     }
 ];
 
 const categories = [
-    { id: "all", name: "All Videos" },
-    { id: "ambient", name: "Ambient Music" },
-    { id: "lofi", name: "Lofi Music" },
-    { id: "nature", name: "Nature Sounds" },
-    { id: "meditation", name: "Meditation" },
-    { id: "asmr", name: "ASMR" }
+    { id: "all", name: "All Videos", icon: "🎥" },
+    { id: "nature", name: "🌿 Nature", description: "Forest, mountains, beach" },
+    { id: "night-city", name: "🌃 Night City", description: "Urban night walks" },
+    { id: "cafe", name: "☕ Cafe", description: "Home atmosphere" },
+    { id: "reading", name: "📚 Reading", description: "For reading and studying" },
+    { id: "meditation", name: "💭 Meditation", description: "Breathing practices" },
+    { id: "asmr", name: "🎨 ASMR", description: "Visual relaxing scenes" },
+    { id: "sleep", name: "💤 Sleep", description: "For better sleep" }
 ];
 
 const sortOptions = [
@@ -137,12 +109,17 @@ const VideoGrid = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState<SortOption>("title-asc");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    // Filter videos based on category and search query
+    // Get all unique tags
+    const allTags = Array.from(new Set(videos.flatMap(video => video.tags)));
+
+    // Filter videos based on category, search query, and tags
     const filteredVideos = videos
         .filter(video => 
             (selectedCategory === "all" || video.category === selectedCategory) &&
-            video.title.toLowerCase().includes(searchQuery.toLowerCase())
+            video.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (selectedTags.length === 0 || selectedTags.every(tag => video.tags.includes(tag)))
         )
         .sort((a, b) => {
             switch (sortBy) {
@@ -158,6 +135,14 @@ const VideoGrid = () => {
                     return 0;
             }
         });
+
+    const toggleTag = (tag: string) => {
+        setSelectedTags(prev => 
+            prev.includes(tag) 
+                ? prev.filter(t => t !== tag)
+                : [...prev, tag]
+        );
+    };
 
     return (
         <div className="flex relative">
@@ -183,10 +168,10 @@ const VideoGrid = () => {
 
             {/* Sidebar */}
             <div 
-                className={`fixed top-0 left-0 h-full bg-teal-900 p-4 transition-transform duration-300 ease-in-out z-40 ${
+                className={`fixed top-0 left-0 h-full bg-teal-900 p-4 transition-transform duration-300 ease-in-out z-40 overflow-y-auto ${
                     isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
-                style={{ width: '16rem' }}
+                style={{ width: '20rem' }}
             >
                 <div className="mt-12">
                     <h2 className="text-xl font-bold text-white mb-4">Categories</h2>
@@ -195,21 +180,49 @@ const VideoGrid = () => {
                             <button
                                 key={category.id}
                                 onClick={() => setSelectedCategory(category.id)}
-                                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
                                     selectedCategory === category.id
                                         ? "bg-teal-700 text-white"
                                         : "text-teal-100 hover:bg-teal-800"
                                 }`}
                             >
-                                {category.name}
+                                <div className="flex items-center">
+                                    <span className="text-xl mr-2">{category.icon}</span>
+                                    <div>
+                                        <div className="font-semibold">{category.name}</div>
+                                        {category.description && (
+                                            <div className="text-sm text-teal-200">{category.description}</div>
+                                        )}
+                                    </div>
+                                </div>
                             </button>
                         ))}
+                    </div>
+
+                    {/* Tags Section */}
+                    <div className="mt-8">
+                        <h3 className="text-lg font-bold text-white mb-3">Tags</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {allTags.map(tag => (
+                                <button
+                                    key={tag}
+                                    onClick={() => toggleTag(tag)}
+                                    className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                                        selectedTags.includes(tag)
+                                            ? "bg-teal-600 text-white"
+                                            : "bg-teal-800 text-teal-100 hover:bg-teal-700"
+                                    }`}
+                                >
+                                    #{tag}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Main Content */}
-            <div className={`flex-1 p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+            <div className={`flex-1 p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
                 {/* Search and Sort Controls */}
                 <div className="mb-6 flex flex-col sm:flex-row gap-4">
                     {/* Search Input */}
@@ -238,6 +251,31 @@ const VideoGrid = () => {
                         </select>
                     </div>
                 </div>
+
+                {/* Active Filters */}
+                {(selectedTags.length > 0 || selectedCategory !== "all") && (
+                    <div className="mb-4 flex flex-wrap gap-2">
+                        {selectedCategory !== "all" && (
+                            <div className="px-3 py-1 bg-teal-700 text-white rounded-full text-sm">
+                                {categories.find(c => c.id === selectedCategory)?.name}
+                            </div>
+                        )}
+                        {selectedTags.map(tag => (
+                            <div key={tag} className="px-3 py-1 bg-teal-700 text-white rounded-full text-sm">
+                                #{tag}
+                            </div>
+                        ))}
+                        <button
+                            onClick={() => {
+                                setSelectedCategory("all");
+                                setSelectedTags([]);
+                            }}
+                            className="px-3 py-1 bg-teal-800 text-white rounded-full text-sm hover:bg-teal-700"
+                        >
+                            Clear all
+                        </button>
+                    </div>
+                )}
 
                 {/* Results Count */}
                 <div className="mb-4 text-teal-100">
