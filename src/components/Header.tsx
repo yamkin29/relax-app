@@ -1,16 +1,49 @@
-const Header = () => {
+'use client'
+import React from "react";
+
+type Tab = 'videos' | 'music' | 'other';
+
+interface HeaderProps {
+    activeTab: Tab;
+    onTabChange: (tab: Tab) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
+    const linkClass = (tab: Tab) =>
+        `font-semibold text-white hover:text-teal-200 transition-colors ` +
+        (activeTab === tab ? 'underline decoration-2' : 'opacity-75');
+
     return (
         <header className="sticky top-0 z-50 bg-teal-900/95 backdrop-blur-sm shadow-lg">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center py-4">
                     <nav className="flex gap-6 text-lg">
-                        <a href="#" className="font-semibold text-white hover:text-teal-200 transition-colors">Videos</a>
-                        <a href="#" className="text-white hover:text-teal-200 transition-colors">Music</a>
-                        <a href="#" className="text-white hover:text-teal-200 transition-colors">Other</a>
+                        <button
+                            onClick={() => onTabChange('videos')}
+                            className={linkClass('videos')}
+                        >
+                            Videos
+                        </button>
+                        <button
+                            onClick={() => onTabChange('music')}
+                            className={linkClass('music')}
+                        >
+                            Music
+                        </button>
+                        <button
+                            onClick={() => onTabChange('other')}
+                            className={linkClass('other')}
+                        >
+                            Other
+                        </button>
                     </nav>
                     <div className="flex gap-4">
-                        <button className="px-4 py-2 text-white hover:text-teal-200 transition-colors">Settings</button>
-                        <button className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors">Login</button>
+                        <button className="px-4 py-2 text-white hover:text-teal-200 transition-colors">
+                            Settings
+                        </button>
+                        <button className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors">
+                            Login
+                        </button>
                     </div>
                 </div>
             </div>
