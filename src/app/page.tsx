@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import VideoGrid from "@/components/VideoGrid";
-import Music from "@/components/Music";
+import Channels from "@/components/Channels";
 
-type Tab = 'videos' | 'music' | 'other';
+type Tab = 'videos' | 'channels' | 'other';
 
 export default function HomePage() {
     const [activeTab, setActiveTab] = useState<Tab>('videos');
@@ -17,14 +17,14 @@ export default function HomePage() {
             <h1 className="text-3xl font-bold text-center mt-10">
                 {activeTab === 'videos'
                     ? 'Ambient Background Videos'
-                    : activeTab === 'music'
-                        ? 'Music'
+                    : activeTab === 'channels'
+                        ? 'Channels'
                         : 'Other Content'}
             </h1>
 
             <div className="p-4">
                 {activeTab === 'videos' && <VideoGrid />}
-                {activeTab === 'music' && <Music />}
+                {activeTab === 'channels' && <Channels />}
                 {activeTab === 'other' && (
                     <div className="text-center mt-10 text-lg">Пока пусто...</div>
                 )}
