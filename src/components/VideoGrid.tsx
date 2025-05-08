@@ -27,9 +27,9 @@ const videos = [
         title: "Night Forest"
     },
     { 
-        thumbnail: "/thumb6.jpg", 
-        link: "https://youtube.com/...",
-        title: "Cozy Fireplace"
+        thumbnail: "https://img.youtube.com/vi/bNmP4NsYgRI/maxresdefault.jpg", 
+        link: "https://www.youtube.com/watch?v=bNmP4NsYgRI&t=2192s&ab_channel=AmbientOutpost",
+        title: "Ambient Outpost"
     }
 ];
 
