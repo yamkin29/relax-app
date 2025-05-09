@@ -8,6 +8,10 @@
   --background-end-rgb: 15, 118, 110;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -15,4 +19,6 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   );
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 } 
