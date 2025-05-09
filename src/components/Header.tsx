@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 
-type Tab = 'videos' | 'channels' | 'other';
+type Tab = 'videos' | 'channels';
 
 interface HeaderProps {
     activeTab: Tab;
@@ -29,12 +29,6 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
                             className={linkClass('channels')}
                         >
                             Channels
-                        </button>
-                        <button
-                            onClick={() => onTabChange('other')}
-                            className={linkClass('other')}
-                        >
-                            Other
                         </button>
                     </nav>
                     <div className="flex gap-4">

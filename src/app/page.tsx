@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import VideoGrid from "@/components/videoGrid/VideoGrid";
 import Channels from "@/components/Channels";
 
-type Tab = 'videos' | 'channels' | 'other';
+type Tab = 'videos' | 'channels';
 
 export default function HomePage() {
     const [activeTab, setActiveTab] = useState<Tab>('videos');
@@ -24,9 +24,6 @@ export default function HomePage() {
             <div className="p-4">
                 {activeTab === 'videos' && <VideoGrid />}
                 {activeTab === 'channels' && <Channels />}
-                {activeTab === 'other' && (
-                    <div className="text-center mt-10 text-lg">Пока пусто...</div>
-                )}
             </div>
         </div>
     );
