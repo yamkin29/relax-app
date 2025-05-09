@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
     return (
         <header className="sticky top-0 z-50 bg-teal-900/95 backdrop-blur-sm shadow-lg">
             <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center py-4">
+                <div className="flex justify-between items-center py-2">
                     <nav className="flex gap-6 text-lg">
                         <button
                             onClick={() => onTabChange('videos')}
