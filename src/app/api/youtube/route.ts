@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server';
 import { YOUTUBE_API_KEY } from '@/constants/youtube';
 import { YOUTUBE_API_ENDPOINTS, YOUTUBE_API_PARTS, YOUTUBE_API_ERROR_MESSAGES } from '@/constants/youtube';
 import { buildYouTubeApiUrl, transformChannelResponse, validateYouTubeUsername, validateYouTubeChannelId } from '@/utils/youtube';
-import { YouTubeApiResponse } from '@/types/youtube';
+import { YouTubeApiResponse, YouTubeVideosResponse } from '@/types/youtube';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username');
     const channelId = searchParams.get('channelId');
+    const getPopularVideos = searchParams.get('getPopularVideos') === 'true';
 
-    console.log('YouTube API Request:', { username, channelId });
+    console.log('YouTube API Request:', { username, channelId, getPopularVideos });
 
     try {
         if (username) {
@@ -45,6 +46,54 @@ export async function GET(request: Request) {
                     { error: 'Invalid channel ID format' },
                     { status: 400 }
                 );
+            }
+
+            if (getPopularVideos) {
+                const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.SEARCH, {
+                    part: YOUTUBE_API_PARTS.SNIPPET,
+                    channelId: channelId,
+                    order: 'viewCount',
+                    type: 'video',
+                    maxResults: 2,
+                    key: YOUTUBE_API_KEY,
+                });
+
+                const response = await fetch(url);
+                const data: YouTubeVideosResponse = await response.json();
+
+                if (!data.items || data.items.length === 0) {
+                    return NextResponse.json(
+                        { error: 'No videos found' },
+                        { status: 404 }
+                    );
+                }
+
+                // Get video statistics for each video
+                const videosWithStats = await Promise.all(
+                    data.items.map(async (video) => {
+                        const statsUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.VIDEOS, {
+                            part: YOUTUBE_API_PARTS.STATISTICS,
+                            id: video.id,
+                            key: YOUTUBE_API_KEY,
+                        });
+
+                        const statsResponse = await fetch(statsUrl);
+                        const statsData = await statsResponse.json();
+
+                        return {
+                            id: video.id,
+                            title: video.snippet.title,
+                            thumbnail: video.snippet.thumbnails.maxres?.url || 
+                                     video.snippet.thumbnails.high?.url || 
+                                     video.snippet.thumbnails.medium?.url || 
+                                     video.snippet.thumbnails.default?.url,
+                            viewCount: statsData.items[0]?.statistics?.viewCount || '0',
+                            publishedAt: video.snippet.publishedAt,
+                        };
+                    })
+                );
+
+                return NextResponse.json({ videos: videosWithStats });
             }
 
             const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {

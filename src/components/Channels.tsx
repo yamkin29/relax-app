@@ -1,7 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getChannelInfo, getChannelIdByUsername, ChannelInfo } from '@/services/youtube';
+import { getChannelInfo, getChannelIdByUsername, getPopularVideos } from '@/services/youtube';
+import { ChannelInfo, PopularVideo } from "@/types/youtube";
 
 interface Channel {
     id: string;
@@ -11,11 +12,7 @@ interface Channel {
     channelId: string;
     profileImage: string;
     channelInfo?: ChannelInfo;
-    popularVideos: {
-        id: string;
-        title: string;
-        thumbnail: string;
-    }[];
+    popularVideos: PopularVideo[];
 }
 
 const getUsernameFromUrl = (url: string): string | null => {
@@ -34,6 +31,26 @@ const getUsernameFromUrl = (url: string): string | null => {
     }
 };
 
+const formatViewCount = (count: string): string => {
+    const num = parseInt(count);
+    if (num >= 1000000) {
+        return `${(num / 1000000).toFixed(1)}M views`;
+    }
+    if (num >= 1000) {
+        return `${(num / 1000).toFixed(1)}K views`;
+    }
+    return `${num} views`;
+};
+
+const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+};
+
 const Channels: React.FC = () => {
     const [channels, setChannels] = useState<Channel[]>([]);
     const [loading, setLoading] = useState(true);
@@ -49,18 +66,7 @@ const Channels: React.FC = () => {
                         youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
                         channelId: '',
                         profileImage: '',
-                        popularVideos: [
-                            {
-                                id: 'v3',
-                                title: 'White Noise for Sleep',
-                                thumbnail: '/videos/white-noise.jpg'
-                            },
-                            {
-                                id: 'v4',
-                                title: 'Rain Sounds for Relaxation',
-                                thumbnail: '/videos/rain-sounds.jpg'
-                            }
-                        ]
+                        popularVideos: []
                     },
                     {
                         id: '2',
@@ -69,18 +75,7 @@ const Channels: React.FC = () => {
                         youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
                         channelId: '',
                         profileImage: '',
-                        popularVideos: [
-                            {
-                                id: 'v3',
-                                title: 'White Noise for Sleep',
-                                thumbnail: '/videos/white-noise.jpg'
-                            },
-                            {
-                                id: 'v4',
-                                title: 'Rain Sounds for Relaxation',
-                                thumbnail: '/videos/rain-sounds.jpg'
-                            }
-                        ]
+                        popularVideos: []
                     }
                 ];
 
@@ -106,8 +101,13 @@ const Channels: React.FC = () => {
                             return channel;
                         }
 
-                        const channelInfo = await getChannelInfo(channelId);
+                        const [channelInfo, popularVideos] = await Promise.all([
+                            getChannelInfo(channelId),
+                            getPopularVideos(channelId)
+                        ]);
+
                         console.log(`Channel info for ${channel.name}:`, channelInfo);
+                        console.log(`Popular videos for ${channel.name}:`, popularVideos);
 
                         if (!channelInfo) {
                             console.log(`No channel info found for ${channel.name}`);
@@ -119,7 +119,8 @@ const Channels: React.FC = () => {
                             channelId,
                             channelInfo,
                             profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
-                            videoCount: parseInt(channelInfo.statistics?.videoCount || '0')
+                            videoCount: parseInt(channelInfo.statistics?.videoCount || '0'),
+                            popularVideos
                         };
                     })
                 );
@@ -192,17 +193,44 @@ const Channels: React.FC = () => {
                             <h3 className="text-lg font-semibold text-white mb-3">Popular Videos</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {channel.popularVideos.map((video) => (
-                                    <div key={video.id} className="relative aspect-video rounded-lg overflow-hidden">
-                                        <Image
-                                            src={video.thumbnail}
-                                            alt={video.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                                            <p className="text-sm text-white truncate">{video.title}</p>
+                                    <a
+                                        key={video.id}
+                                        href={`https://www.youtube.com/watch?v=${video.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group"
+                                    >
+                                        <div className="relative aspect-video rounded-lg overflow-hidden">
+                                            <Image
+                                                src={video.thumbnail}
+                                                alt={video.title}
+                                                fill
+                                                className="object-cover transition-transform group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <svg
+                                                    className="w-12 h-12 text-white"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M8 5v14l11-7z" />
+                                                </svg>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div className="mt-2">
+                                            <h4 className="text-sm font-medium text-white line-clamp-2">
+                                                {video.title}
+                                            </h4>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <span className="text-xs text-gray-400">
+                                                    {formatViewCount(video.viewCount)}
+                                                </span>
+                                                <span className="text-xs text-gray-400">
+                                                    {formatDate(video.publishedAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 ))}
                             </div>
                         </div>

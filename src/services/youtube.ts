@@ -1,4 +1,4 @@
-import { ChannelInfo } from '@/types/youtube';
+import { ChannelInfo, PopularVideo } from '@/types/youtube';
 import { validateYouTubeUsername, validateYouTubeChannelId } from '@/utils/youtube';
 
 export const getChannelInfo = async (channelId: string): Promise<ChannelInfo | null> => {
@@ -33,5 +33,23 @@ export const getChannelIdByUsername = async (username: string): Promise<string |
     } catch (error) {
         console.error('Error fetching channel ID:', error);
         return null;
+    }
+};
+
+export const getPopularVideos = async (channelId: string): Promise<PopularVideo[]> => {
+    if (!validateYouTubeChannelId(channelId)) {
+        throw new Error('Invalid channel ID format');
+    }
+
+    try {
+        const response = await fetch(`/api/youtube?channelId=${channelId}&getPopularVideos=true`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch popular videos');
+        }
+        const data = await response.json();
+        return data.videos;
+    } catch (error) {
+        console.error('Error fetching popular videos:', error);
+        return [];
     }
 }; 
