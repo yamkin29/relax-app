@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from "react";
-import Header from "@/components/Header";
+import Header from "@/components/header/Header";
 import VideoGrid from "@/components/videoGrid/VideoGrid";
 import Channels from "@/components/Channels";
 
