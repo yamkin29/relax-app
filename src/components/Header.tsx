@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useCallback } from "react";
 
 type Tab = 'videos' | 'channels';
 
@@ -13,19 +13,27 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
         `font-semibold text-white hover:text-teal-200 transition-colors ` +
         (activeTab === tab ? 'underline decoration-2' : 'opacity-75');
 
+    const handleVideosClick = useCallback(() => {
+        onTabChange('videos');
+    }, [onTabChange]);
+
+    const handleChannelsClick = useCallback(() => {
+        onTabChange('channels');
+    }, [onTabChange]);
+
     return (
         <header className="sticky top-0 z-50 bg-teal-900/95 backdrop-blur-sm shadow-lg">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center py-2">
                     <nav className="flex gap-6 text-lg">
                         <button
-                            onClick={() => onTabChange('videos')}
+                            onClick={handleVideosClick}
                             className={linkClass('videos')}
                         >
                             Videos
                         </button>
                         <button
-                            onClick={() => onTabChange('channels')}
+                            onClick={handleChannelsClick}
                             className={linkClass('channels')}
                         >
                             Channels
@@ -45,4 +53,4 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
     );
 };
 
-export default Header;
+export default React.memo(Header);

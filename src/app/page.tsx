@@ -6,27 +6,41 @@ import Channels from "@/components/Channels";
 
 type Tab = 'videos' | 'channels';
 
+const PAGE_TITLES: Record<Tab, string> = {
+    videos: 'Ambient Background Videos',
+    channels: 'Channels'
+} as const;
+
 const HomePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<Tab>('videos');
 
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'videos':
+                return <VideoGrid />;
+            case 'channels':
+                return <Channels />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="bg-teal-800 min-h-screen text-white">
-            <Header activeTab={activeTab} onTabChange={setActiveTab} />
+            <Header 
+                activeTab={activeTab} 
+                onTabChange={setActiveTab} 
+            />
 
             <h1 className="text-3xl font-bold text-center mt-10">
-                {activeTab === 'videos'
-                    ? 'Ambient Background Videos'
-                    : activeTab === 'channels'
-                        ? 'Channels'
-                        : 'Other Content'}
+                {PAGE_TITLES[activeTab]}
             </h1>
 
             <div className="p-4">
-                {activeTab === 'videos' && <VideoGrid />}
-                {activeTab === 'channels' && <Channels />}
+                {renderContent()}
             </div>
         </div>
     );
-}
+};
 
 export default HomePage;
