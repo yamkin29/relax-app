@@ -6,7 +6,7 @@ import Channels from "@/components/Channels";
 
 type Tab = 'videos' | 'channels';
 
-export default function HomePage() {
+const HomePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<Tab>('videos');
 
     return (
@@ -28,3 +28,5 @@ export default function HomePage() {
         </div>
     );
 }
+
+export default HomePage;
