@@ -1,18 +1,19 @@
 "use client";
-
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import rawVideos from '../../data/videos.json';
 import Sidebar from './components/Sidebar';
 import SearchAndSortControls from './components/SearchAndSortControls';
 import ActiveFilters from './components/ActiveFilters';
 import VideoGridContent from './components/VideoGridContent';
-import {RawVideo, SortOption, Video} from "@/components/videoGrid/types/video";
+import { RawVideo, SortOption, Video } from "@/components/videoGrid/types/video";
 
 const videos: Video[] = (rawVideos as RawVideo[]).map(video => ({
     ...video,
     thumbnail: `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`,
     link: `https://www.youtube.com/watch?v=${video.youtubeId}`
 }));
+
+const collator = new Intl.Collator('en-US', { numeric: true, sensitivity: 'base' })
 
 const VideoGrid = () => {
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -21,28 +22,30 @@ const VideoGrid = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const allTags = Array.from(new Set(videos.flatMap(video => video.tags)));
+    const allTags = useMemo(() => Array.from(new Set(videos.flatMap(video => video.tags))), []);
 
-    const filteredVideos = videos
-        .filter(video => 
-            (selectedCategory === "all" || video.category === selectedCategory) &&
-            video.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-            (selectedTags.length === 0 || selectedTags.every(tag => video.tags.includes(tag)))
-        )
-        .sort((a, b) => {
-            switch (sortBy) {
-                case "title-asc":
-                    return a.title.localeCompare(b.title);
-                case "title-desc":
-                    return b.title.localeCompare(a.title);
-                case "category-asc":
-                    return a.category.localeCompare(b.category);
-                case "category-desc":
-                    return b.category.localeCompare(a.category);
-                default:
-                    return 0;
-            }
-        });
+    const filteredSortedVideos = useMemo(() => {
+        return videos
+            .filter(video =>
+                (selectedCategory === 'all' || video.category === selectedCategory) &&
+                video.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                (selectedTags.length === 0 || selectedTags.every(tag => video.tags.includes(tag)))
+            )
+            .sort((a, b) => {
+                switch (sortBy) {
+                    case 'title-asc':
+                        return collator.compare(a.title, b.title)
+                    case 'title-desc':
+                        return collator.compare(b.title, a.title)
+                    case 'category-asc':
+                        return collator.compare(a.category, b.category)
+                    case 'category-desc':
+                        return collator.compare(b.category, a.category)
+                    default:
+                        return 0
+                }
+            })
+    }, [selectedCategory, searchQuery, selectedTags, sortBy])
 
     const toggleTag = (tag: string) => {
         setSelectedTags(prev => 
@@ -101,7 +104,7 @@ const VideoGrid = () => {
                     onClearAll={handleClearAll}
                 />
 
-                <VideoGridContent videos={filteredVideos} />
+                <VideoGridContent videos={filteredSortedVideos} />
             </div>
         </div>
     );
