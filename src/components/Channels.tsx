@@ -1,13 +1,16 @@
 'use client'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { getChannelInfo, getChannelIdByUsername, ChannelInfo } from '@/services/youtube';
 
 interface Channel {
     id: string;
     name: string;
     videoCount: number;
     youtubeUrl: string;
+    channelId: string;
     profileImage: string;
+    channelInfo?: ChannelInfo;
     popularVideos: {
         id: string;
         title: string;
@@ -15,28 +18,130 @@ interface Channel {
     }[];
 }
 
+const getUsernameFromUrl = (url: string): string | null => {
+    try {
+        const urlObj = new URL(url);
+        const pathParts = urlObj.pathname.split('/');
+        
+        if (url.includes('@')) {
+            return pathParts[1].replace('@', '');
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Invalid YouTube URL:', url);
+        return null;
+    }
+};
+
 const Channels: React.FC = () => {
-    const channels: Channel[] = [
-        {
-            id: '1',
-            name: 'Ambient Channel 1',
-            videoCount: 150,
-            youtubeUrl: 'https://youtube.com/channel/1',
-            profileImage: '/channel1.jpg',
-            popularVideos: [
-                {
-                    id: 'v1',
-                    title: 'Relaxing Ambient Mix',
-                    thumbnail: '/video1.jpg'
-                },
-                {
-                    id: 'v2',
-                    title: 'Calm Nature Sounds',
-                    thumbnail: '/video2.jpg'
-                }
-            ]
-        },
-    ];
+    const [channels, setChannels] = useState<Channel[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchChannelData = async () => {
+            try {
+                const channelsData: Channel[] = [
+                    {
+                        id: '1',
+                        name: 'Relaxing White Noise',
+                        videoCount: 280,
+                        youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [
+                            {
+                                id: 'v3',
+                                title: 'White Noise for Sleep',
+                                thumbnail: '/videos/white-noise.jpg'
+                            },
+                            {
+                                id: 'v4',
+                                title: 'Rain Sounds for Relaxation',
+                                thumbnail: '/videos/rain-sounds.jpg'
+                            }
+                        ]
+                    },
+                    {
+                        id: '2',
+                        name: 'Relaxing White Noise',
+                        videoCount: 280,
+                        youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [
+                            {
+                                id: 'v3',
+                                title: 'White Noise for Sleep',
+                                thumbnail: '/videos/white-noise.jpg'
+                            },
+                            {
+                                id: 'v4',
+                                title: 'Rain Sounds for Relaxation',
+                                thumbnail: '/videos/rain-sounds.jpg'
+                            }
+                        ]
+                    }
+                ];
+
+                // Fetch channel information for each channel
+                const updatedChannels = await Promise.all(
+                    channelsData.map(async (channel) => {
+                        const username = getUsernameFromUrl(channel.youtubeUrl);
+                        console.log(`Processing channel ${channel.name}:`, {
+                            url: channel.youtubeUrl,
+                            extractedUsername: username
+                        });
+
+                        if (!username) {
+                            console.log(`No username found for channel ${channel.name}`);
+                            return channel;
+                        }
+
+                        const channelId = await getChannelIdByUsername(username);
+                        console.log(`Channel ID for ${channel.name}:`, channelId);
+
+                        if (!channelId) {
+                            console.log(`No channel ID found for ${channel.name}`);
+                            return channel;
+                        }
+
+                        const channelInfo = await getChannelInfo(channelId);
+                        console.log(`Channel info for ${channel.name}:`, channelInfo);
+
+                        if (!channelInfo) {
+                            console.log(`No channel info found for ${channel.name}`);
+                            return channel;
+                        }
+
+                        return {
+                            ...channel,
+                            channelId,
+                            channelInfo,
+                            profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
+                            videoCount: parseInt(channelInfo.statistics?.videoCount || '0')
+                        };
+                    })
+                );
+
+                setChannels(updatedChannels);
+            } catch (error) {
+                console.error('Error fetching channel data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchChannelData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-8">
+                <div className="text-white text-center">Loading channels...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -47,17 +152,32 @@ const Channels: React.FC = () => {
                         <div className="flex items-center gap-4 mb-4">
                             <div className="relative w-16 h-16 rounded-full overflow-hidden">
                                 <Image
-                                    src={channel.profileImage}
+                                    src={channel.profileImage || '/default-channel.jpg'}
                                     alt={channel.name}
                                     fill
                                     className="object-cover"
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.src = '/default-channel.jpg';
+                                    }}
                                 />
                             </div>
                             <div>
                                 <h2 className="text-xl font-semibold text-white">{channel.name}</h2>
                                 <p className="text-teal-200">{channel.videoCount} videos</p>
+                                {channel.channelInfo && channel.channelInfo.statistics?.subscriberCount && (
+                                    <p className="text-teal-300 text-sm">
+                                        {parseInt(channel.channelInfo.statistics.subscriberCount).toLocaleString()} subscribers
+                                    </p>
+                                )}
                             </div>
                         </div>
+                        
+                        {channel.channelInfo && (
+                            <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+                                {channel.channelInfo.description}
+                            </p>
+                        )}
                         
                         <a
                             href={channel.youtubeUrl}
