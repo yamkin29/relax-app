@@ -1,4 +1,4 @@
-import VideoCard from "../../VideoCard";
+import VideoCard from "../../videoCard/VideoCard";
 import { Video } from "@/components/videoGrid/types/video";
 
 interface VideoGridContentProps {
