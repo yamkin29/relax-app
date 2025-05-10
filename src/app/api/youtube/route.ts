@@ -49,7 +49,7 @@ export async function GET(request: Request) {
             }
 
             if (getPopularVideos) {
-                const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.SEARCH, {
+                const searchUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.SEARCH, {
                     part: YOUTUBE_API_PARTS.SNIPPET,
                     channelId: channelId,
                     order: 'viewCount',
@@ -58,22 +58,21 @@ export async function GET(request: Request) {
                     key: YOUTUBE_API_KEY,
                 });
 
-                const response = await fetch(url);
-                const data: YouTubeVideosResponse = await response.json();
+                const searchResponse = await fetch(searchUrl);
+                const searchData: YouTubeVideosResponse = await searchResponse.json();
 
-                if (!data.items || data.items.length === 0) {
+                if (!searchData.items || searchData.items.length === 0) {
                     return NextResponse.json(
                         { error: 'No videos found' },
                         { status: 404 }
                     );
                 }
 
-                // Get video statistics for each video
                 const videosWithStats = await Promise.all(
-                    data.items.map(async (video) => {
+                    searchData.items.map(async (video) => {
                         const statsUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.VIDEOS, {
                             part: YOUTUBE_API_PARTS.STATISTICS,
-                            id: video.id,
+                            id: video.id.videoId,
                             key: YOUTUBE_API_KEY,
                         });
 
@@ -81,7 +80,7 @@ export async function GET(request: Request) {
                         const statsData = await statsResponse.json();
 
                         return {
-                            id: video.id,
+                            id: video.id.videoId,
                             title: video.snippet.title,
                             thumbnail: video.snippet.thumbnails.maxres?.url || 
                                      video.snippet.thumbnails.high?.url || 

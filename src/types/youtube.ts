@@ -33,7 +33,10 @@ export interface YouTubeVideoSnippet {
 }
 
 export interface YouTubeVideo {
-    id: string;
+    id: {
+        videoId: string;
+        kind: string;
+    };
     snippet: YouTubeVideoSnippet;
     statistics?: {
         viewCount: string;
