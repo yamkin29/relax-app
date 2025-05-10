@@ -1,20 +1,11 @@
-export interface ChannelInfo {
-    id: string;
-    title: string;
-    description: string;
-    thumbnails: {
-        default?: { url: string };
-        medium?: { url: string };
-        high?: { url: string };
-    };
-    statistics: {
-        viewCount?: string;
-        subscriberCount?: string;
-        videoCount?: string;
-    };
-}
+import { ChannelInfo } from '@/types/youtube';
+import { validateYouTubeUsername, validateYouTubeChannelId } from '@/utils/youtube';
 
 export const getChannelInfo = async (channelId: string): Promise<ChannelInfo | null> => {
+    if (!validateYouTubeChannelId(channelId)) {
+        throw new Error('Invalid channel ID format');
+    }
+
     try {
         const response = await fetch(`/api/youtube?channelId=${channelId}`);
         if (!response.ok) {
@@ -28,6 +19,10 @@ export const getChannelInfo = async (channelId: string): Promise<ChannelInfo | n
 };
 
 export const getChannelIdByUsername = async (username: string): Promise<string | null> => {
+    if (!validateYouTubeUsername(username)) {
+        throw new Error('Invalid username format');
+    }
+
     try {
         const response = await fetch(`/api/youtube?username=${username}`);
         if (!response.ok) {

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
+import { YOUTUBE_API_KEY } from '@/constants/youtube';
+import { YOUTUBE_API_ENDPOINTS, YOUTUBE_API_PARTS, YOUTUBE_API_ERROR_MESSAGES } from '@/constants/youtube';
+import { buildYouTubeApiUrl, transformChannelResponse, validateYouTubeUsername, validateYouTubeChannelId } from '@/utils/youtube';
+import { YouTubeApiResponse } from '@/types/youtube';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -12,49 +13,69 @@ export async function GET(request: Request) {
 
     try {
         if (username) {
-            // Get channel ID by username
-            const url = `${YOUTUBE_API_BASE}/channels?part=id&forUsername=${username}&key=${YOUTUBE_API_KEY}`;
-            console.log('Fetching channel ID:', url);
-            
+            if (!validateYouTubeUsername(username)) {
+                return NextResponse.json(
+                    { error: 'Invalid username format' },
+                    { status: 400 }
+                );
+            }
+
+            const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
+                part: YOUTUBE_API_PARTS.ID,
+                forUsername: username,
+                key: YOUTUBE_API_KEY,
+            });
+
             const response = await fetch(url);
-            const data = await response.json();
-            console.log('Channel ID response:', data);
+            const data: YouTubeApiResponse = await response.json();
 
             if (!data.items || data.items.length === 0) {
-                console.log('No channel found for username:', username);
-                return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+                return NextResponse.json(
+                    { error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND },
+                    { status: 404 }
+                );
             }
 
             return NextResponse.json({ channelId: data.items[0].id });
         }
 
         if (channelId) {
-            // Get channel info by ID
-            const url = `${YOUTUBE_API_BASE}/channels?part=snippet,statistics&id=${channelId}&key=${YOUTUBE_API_KEY}`;
-            console.log('Fetching channel info:', url);
-            
-            const response = await fetch(url);
-            const data = await response.json();
-            console.log('Channel info response:', data);
-
-            if (!data.items || data.items.length === 0) {
-                console.log('No channel found for ID:', channelId);
-                return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+            if (!validateYouTubeChannelId(channelId)) {
+                return NextResponse.json(
+                    { error: 'Invalid channel ID format' },
+                    { status: 400 }
+                );
             }
 
-            const channel = data.items[0];
-            return NextResponse.json({
-                id: channel.id,
-                title: channel.snippet?.title,
-                description: channel.snippet?.description,
-                thumbnails: channel.snippet?.thumbnails,
-                statistics: channel.statistics
+            const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
+                part: [YOUTUBE_API_PARTS.SNIPPET, YOUTUBE_API_PARTS.STATISTICS].join(','),
+                id: channelId,
+                key: YOUTUBE_API_KEY,
             });
+
+            const response = await fetch(url);
+            const data: YouTubeApiResponse = await response.json();
+
+            const channelInfo = transformChannelResponse(data);
+            if (!channelInfo) {
+                return NextResponse.json(
+                    { error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND },
+                    { status: 404 }
+                );
+            }
+
+            return NextResponse.json(channelInfo);
         }
 
-        return NextResponse.json({ error: 'Missing username or channelId parameter' }, { status: 400 });
+        return NextResponse.json(
+            { error: YOUTUBE_API_ERROR_MESSAGES.INVALID_PARAMETERS },
+            { status: 400 }
+        );
     } catch (error) {
         console.error('YouTube API Error:', error);
-        return NextResponse.json({ error: 'Failed to fetch YouTube data' }, { status: 500 });
+        return NextResponse.json(
+            { error: YOUTUBE_API_ERROR_MESSAGES.API_ERROR },
+            { status: 500 }
+        );
     }
 } 
