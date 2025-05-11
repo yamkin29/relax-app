@@ -1,8 +1,6 @@
-'use client'
-import React from "react";
 import Channels from "@/components/Channels";
 
-const ChannelsPage: React.FC = () => {
+export default function ChannelsPage() {
     return (
         <div className="p-4">
             <h1 className="text-3xl font-bold text-center mt-10 mb-8">
@@ -11,6 +9,4 @@ const ChannelsPage: React.FC = () => {
             <Channels />
         </div>
     );
-};
-
-export default ChannelsPage; 
+} 
