@@ -5,7 +5,7 @@ export const categories: Category[] = [
     { id: "nature", name: "🌿 Nature", description: "Forest, mountains, beach" },
     { id: "night-city", name: "🌃 Night City", description: "Urban night walks" },
     { id: "cafe", name: "☕ Cafe", description: "Home atmosphere" },
-    { id: "Work", name: "💼 Work", description: "Work atmosphere" },
+    { id: "work", name: "💼 Work", description: "Work atmosphere" },
     { id: "reading", name: "📚 Reading", description: "For reading and studying" },
     { id: "focus", name: "💭 Focus", description: "Focus practices" },
     { id: "sleep", name: "💤 Sleep", description: "For better sleep" }
