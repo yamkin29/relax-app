@@ -5,8 +5,8 @@ const Footer = () => {
     return (
         <footer className="bg-teal-900/50 backdrop-blur-sm mt-auto">
             <div className="container mx-auto px-4 py-6">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="text-center md:text-left">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="text-center">
                         <p className="text-teal-200">
                             Created by{' '}
                             <Link
