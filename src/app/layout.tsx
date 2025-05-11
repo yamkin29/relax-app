@@ -5,6 +5,7 @@ import React from 'react';
 import Header from '@/components/header/Header';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
+import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {children}
                 <SpeedInsights />
                 <Analytics />
+                <Footer />
             </body>
         </html>
     );
