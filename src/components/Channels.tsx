@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { getChannelInfo, getChannelIdByUsername, getPopularVideos } from '@/services/youtube';
 import { ChannelInfo, PopularVideo } from "@/types/youtube";
+import VideoModal from './VideoModal';
 
 interface Channel {
     id: string;
@@ -53,6 +54,7 @@ const formatDate = (dateString: string): string => {
 
 const Channels: React.FC = () => {
     const [channels, setChannels] = useState<Channel[]>([]);
+    const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -79,7 +81,6 @@ const Channels: React.FC = () => {
                     }
                 ];
 
-                // Fetch channel information for each channel
                 const updatedChannels = await Promise.all(
                     channelsData.map(async (channel) => {
                         const username = getUsernameFromUrl(channel.youtubeUrl);
@@ -193,12 +194,10 @@ const Channels: React.FC = () => {
                             <h3 className="text-lg font-semibold text-white mb-3">Popular Videos</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {channel.popularVideos.map((video) => (
-                                    <a
+                                    <div
                                         key={video.id}
-                                        href={`https://www.youtube.com/watch?v=${video.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="group"
+                                        onClick={() => setSelectedVideo(video.id)}
+                                        className="group cursor-pointer"
                                     >
                                         <div className="relative aspect-video rounded-lg overflow-hidden">
                                             <Image
@@ -230,13 +229,20 @@ const Channels: React.FC = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 ))}
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+            {selectedVideo && (
+                <VideoModal
+                    videoId={selectedVideo}
+                    isOpen={!!selectedVideo}
+                    onClose={() => setSelectedVideo(null)}
+                />
+            )}
         </div>
     );
 };
