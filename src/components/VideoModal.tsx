@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import YouTube from 'react-youtube';
 
 interface VideoModalProps {
@@ -8,26 +8,48 @@ interface VideoModalProps {
 }
 
 const VideoModal: React.FC<VideoModalProps> = ({ videoId, isOpen, onClose }) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'hidden';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen, onClose]);
+
+    const handleBackdropClick = (e: React.MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+            onClose();
+        }
+    };
+
     if (!isOpen) return null;
 
     const opts = {
-        height: '390',
-        width: '640',
+        height: '100%',
+        width: '100%',
         playerVars: {
             autoplay: 1,
         },
     };
 
     return (
-        <div className="fixed inset-0 bg-teal-800 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-teal-800 p-4 rounded-lg relative">
-                <button
-                    onClick={onClose}
-                    className="absolute -top-4 -right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
-                >
-                    ×
-                </button>
-                <YouTube videoId={videoId} opts={opts} />
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={handleBackdropClick}>
+            <div ref={modalRef} className="relative w-full max-w-4xl aspect-video bg-teal-800 rounded-lg overflow-hidden">
+                <div className="w-full h-full">
+                    <YouTube videoId={videoId} opts={opts} className="w-full h-full" />
+                </div>
             </div>
         </div>
     );
