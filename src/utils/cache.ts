@@ -37,7 +37,7 @@ export const cacheUtils = {
         const cached = localStorage.getItem(key);
         if (!cached) return true;
 
-        const { timestamp }: CacheData<any> = JSON.parse(cached);
+        const { timestamp }: CacheData<unknown> = JSON.parse(cached);
         return Date.now() - timestamp > CACHE_DURATION;
     },
 

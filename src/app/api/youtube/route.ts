@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const channelId = searchParams.get('channelId');
     const getPopularVideos = searchParams.get('getPopularVideos') === 'true';
 
-    console.log('YouTube API Request:', { username, channelId, getPopularVideos });
+    console.warn('YouTube API Request:', { username, channelId, getPopularVideos });
 
     try {
         if (username) {

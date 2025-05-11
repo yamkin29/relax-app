@@ -120,31 +120,31 @@ const Channels: React.FC = () => {
                 const updatedChannels = await Promise.all(
                     channelsData.map(async (channel) => {
                         const username = getUsernameFromUrl(channel.youtubeUrl);
-                        console.log(`Processing channel ${channel.name}:`, {
+                        console.warn(`Processing channel ${channel.name}:`, {
                             url: channel.youtubeUrl,
                             extractedUsername: username,
                         });
 
                         if (!username) {
-                            console.log(`No username found for channel ${channel.name}`);
+                            console.warn(`No username found for channel ${channel.name}`);
                             return channel;
                         }
 
                         const channelId = await getChannelIdByUsername(username);
-                        console.log(`Channel ID for ${channel.name}:`, channelId);
+                        console.warn(`Channel ID for ${channel.name}:`, channelId);
 
                         if (!channelId) {
-                            console.log(`No channel ID found for ${channel.name}`);
+                            console.warn(`No channel ID found for ${channel.name}`);
                             return channel;
                         }
 
                         const [channelInfo, popularVideos] = await Promise.all([getChannelInfo(channelId), getPopularVideos(channelId)]);
 
-                        console.log(`Channel info for ${channel.name}:`, channelInfo);
-                        console.log(`Popular videos for ${channel.name}:`, popularVideos);
+                        console.warn(`Channel info for ${channel.name}:`, channelInfo);
+                        console.warn(`Popular videos for ${channel.name}:`, popularVideos);
 
                         if (!channelInfo) {
-                            console.log(`No channel info found for ${channel.name}`);
+                            console.warn(`No channel info found for ${channel.name}`);
                             return channel;
                         }
 
