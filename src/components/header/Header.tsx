@@ -1,23 +1,21 @@
 'use client'
-import React, { useCallback } from "react";
-import { Tab } from "@/components/header/types/header";
-import {HEADER_TEXTS, STYLES} from "@/components/header/constants/header";
+import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { HEADER_TEXTS, STYLES } from "@/components/header/constants/header";
 import NavLink from "@/components/header/components/NavLink";
 import ActionButton from "@/components/header/components/ActionButton";
 
-export interface HeaderProps {
-    activeTab: Tab;
-    onTabChange: (tab: Tab) => void;
-}
+const Header: React.FC = () => {
+    const router = useRouter();
+    const pathname = usePathname();
 
-const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
-    const handleVideosClick = useCallback(() => {
-        onTabChange('videos');
-    }, [onTabChange]);
+    const handleVideosClick = () => {
+        router.push('/videos');
+    };
 
-    const handleChannelsClick = useCallback(() => {
-        onTabChange('channels');
-    }, [onTabChange]);
+    const handleChannelsClick = () => {
+        router.push('/channels');
+    };
 
     return (
         <header className={STYLES.header}>
@@ -25,13 +23,13 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange }) => {
                 <div className={STYLES.nav}>
                     <nav className={STYLES.navLinks}>
                         <NavLink 
-                            isActive={activeTab === 'videos'} 
+                            isActive={pathname === '/videos'} 
                             onClick={handleVideosClick}
                         >
                             {HEADER_TEXTS.VIDEOS}
                         </NavLink>
                         <NavLink 
-                            isActive={activeTab === 'channels'} 
+                            isActive={pathname === '/channels'} 
                             onClick={handleChannelsClick}
                         >
                             {HEADER_TEXTS.CHANNELS}
