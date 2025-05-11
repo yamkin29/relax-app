@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Relax App 🌿
 
-## Getting Started
+Relax App - это современное веб-приложение, созданное для создания уютной и расслабляющей атмосферы. Оно объединяет в себе коллекцию успокаивающих видео и каналов, которые помогут вам сосредоточиться, расслабиться или создать идеальную атмосферу для работы и отдыха.
 
-First, run the development server:
+## 🌟 Основные возможности
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 🎥 Видео контент
+- Коллекция успокаивающих видео с различными темами:
+  - Природа (лес, горы, пляж)
+  - Ночной город
+  - Кафе
+  - Рабочая атмосфера
+  - Чтение и учеба
+  - Практики концентрации
+  - Сон и релаксация
+
+### 📱 Удобный интерфейс
+- Адаптивный дизайн для всех устройств
+- Удобная навигация по категориям
+- Поиск по названию видео
+- Сортировка по различным параметрам
+- Теги для быстрого доступа к нужному контенту
+
+### 🎯 Дополнительные функции
+- Встроенный видеоплеер
+- Модальные окна для просмотра видео
+- Кэширование данных для быстрой загрузки
+- Интеграция с YouTube API
+- Поддержка популярных видео с каналов
+
+## 🛠 Технологии
+
+- **Frontend**: Next.js, React, TypeScript
+- **Стилизация**: Tailwind CSS
+- **API**: YouTube Data API
+- **Развертывание**: Vercel
+- **Аналитика**: Vercel Analytics, Speed Insights
+
+## 🚀 Начало работы
+
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/your-username/relax-app.git
+   ```
+
+2. Установите зависимости:
+   ```bash
+   npm install
+   ```
+
+3. Создайте файл с данными:
+   - Скопируйте `videos.example.json` в `src/data/videos.json`
+   - Заполните файл своими данными
+
+4. Запустите приложение:
+   ```bash
+   npm run dev
+   ```
+
+## 📝 Структура проекта
+
+```
+src/
+├── app/          # Основные страницы приложения
+├── components/   # React компоненты
+├── constants/    # Константы и конфигурации
+├── data/         # Данные приложения
+├── services/     # Сервисы и API
+├── store/        # Управление состоянием
+├── types/        # TypeScript типы
+└── utils/        # Вспомогательные функции
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🤝 Вклад в проект
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Мы приветствуем вклад в развитие проекта! Если у вас есть идеи по улучшению или вы нашли ошибку, пожалуйста, создайте issue или pull request.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📞 Связь
 
-## Learn More
+- Telegram: [@yamkin_alex](https://t.me/yamkin_alex)
+- GitHub: [yamkin29](https://github.com/yamkin29)
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Лицензия
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© 2025 Relax App. Все права защищены.
