@@ -5,6 +5,7 @@ import { getChannelInfo, getChannelIdByUsername, getPopularVideos } from '@/serv
 import { ChannelInfo, PopularVideo } from "@/types/youtube";
 import VideoModal from './VideoModal';
 import { cacheUtils } from '@/utils/cache';
+import { STYLES } from '@/components/videoCard/constants/videoCard';
 
 interface Channel {
     id: string;
@@ -258,14 +259,16 @@ const Channels: React.FC = () => {
                                                 fill
                                                 className="object-cover transition-transform group-hover:scale-105"
                                             />
-                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                <svg
-                                                    className="w-12 h-12 text-white"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path d="M8 5v14l11-7z" />
-                                                </svg>
+                                            <div className={STYLES.card.overlay}>
+                                                <div className={STYLES.card.playButton.container}>
+                                                    <svg
+                                                        className={STYLES.card.playButton.icon}
+                                                        fill="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path d="M8 5v14l11-7z" />
+                                                    </svg>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="mt-2">
