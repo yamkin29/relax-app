@@ -59,20 +59,6 @@ const VideoGrid = () => {
 
     return (
         <div className="flex relative">
-            <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="fixed top-2 left-4 z-50 p-2 rounded-lg bg-teal-700 text-white hover:bg-teal-600 transition-colors shadow-lg"
-            >
-                <svg
-                    className={`w-6 h-6 transition-transform duration-300 ${isSidebarOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-
             <Sidebar
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
@@ -80,14 +66,22 @@ const VideoGrid = () => {
                 toggleTag={toggleTag}
                 allTags={allTags}
                 isOpen={isSidebarOpen}
+                onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
             />
 
-            <div className={`flex-1 p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
-                <SearchAndSortControls searchQuery={searchQuery} setSearchQuery={setSearchQuery} sortBy={sortBy} setSortBy={setSortBy} />
+            <div className={`flex-1 p-4 transition-all duration-300 ${isSidebarOpen ? 'md:ml-80' : 'ml-0'}`}>
+                <div className="mt-12 md:mt-0">
+                    <SearchAndSortControls
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                    />
 
-                <ActiveFilters selectedCategory={selectedCategory} selectedTags={selectedTags} onClearAll={handleClearAll} />
+                    <ActiveFilters selectedCategory={selectedCategory} selectedTags={selectedTags} onClearAll={handleClearAll} />
 
-                <VideoGridContent videos={filteredSortedVideos} />
+                    <VideoGridContent videos={filteredSortedVideos} />
+                </div>
             </div>
         </div>
     );
