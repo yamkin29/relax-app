@@ -7,7 +7,7 @@ const CACHE_KEYS = {
     CHANNELS: 'channels_cache',
 } as const;
 
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 export const cacheUtils = {
     set: <T>(key: string, data: T): void => {
@@ -18,19 +18,19 @@ export const cacheUtils = {
         localStorage.setItem(key, JSON.stringify(cacheData));
     },
 
-    get: <T>(key: string): T | null => {
+    get: <T>(key: string): { data: T; timestamp: number } | null => {
         const cached = localStorage.getItem(key);
         if (!cached) return null;
 
-        const { data, timestamp }: CacheData<T> = JSON.parse(cached);
-        const isExpired = Date.now() - timestamp > CACHE_DURATION;
+        const cacheData: CacheData<T> = JSON.parse(cached);
+        const isExpired = Date.now() - cacheData.timestamp > CACHE_DURATION;
 
         if (isExpired) {
             localStorage.removeItem(key);
             return null;
         }
 
-        return data;
+        return cacheData;
     },
 
     isExpired: (key: string): boolean => {

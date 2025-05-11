@@ -86,11 +86,11 @@ const Channels: React.FC = () => {
     useEffect(() => {
         const fetchChannelData = async () => {
             try {
-                const cachedChannels = cacheUtils.get<Channel[]>(cacheUtils.keys.CHANNELS);
+                const cachedData = cacheUtils.get<Channel[]>(cacheUtils.keys.CHANNELS);
                 
-                if (cachedChannels) {
-                    setChannels(cachedChannels);
-                    setLastUpdated(Date.now());
+                if (cachedData) {
+                    setChannels(cachedData.data);
+                    setLastUpdated(cachedData.timestamp);
                     setIsFromCache(true);
                     setLoading(false);
                     return;
@@ -162,9 +162,10 @@ const Channels: React.FC = () => {
                     })
                 );
 
+                const currentTime = Date.now();
                 cacheUtils.set(cacheUtils.keys.CHANNELS, updatedChannels);
                 setChannels(updatedChannels);
-                setLastUpdated(Date.now());
+                setLastUpdated(currentTime);
                 setIsFromCache(false);
             } catch (error) {
                 console.error('Error fetching channel data:', error);
