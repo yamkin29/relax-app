@@ -18,4 +18,4 @@ export const YOUTUBE_API_ERROR_MESSAGES = {
     CHANNEL_NOT_FOUND: 'Channel not found',
     INVALID_PARAMETERS: 'Missing username or channelId parameter',
     API_ERROR: 'Failed to fetch YouTube data',
-} as const; 
+} as const;

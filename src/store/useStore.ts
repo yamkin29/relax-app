@@ -18,10 +18,10 @@ export const useStore = create<AppState>()(
             {
                 name: 'app-storage',
                 partialize: (state) => ({ activeTab: state.activeTab }),
-            }
+            },
         ),
         {
             name: 'app-store',
-        }
-    )
-); 
+        },
+    ),
+);

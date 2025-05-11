@@ -1,8 +1,8 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { getChannelInfo, getChannelIdByUsername, getPopularVideos } from '@/services/youtube';
-import { ChannelInfo, PopularVideo } from "@/types/youtube";
+import { ChannelInfo, PopularVideo } from '@/types/youtube';
 import VideoModal from './VideoModal';
 import { cacheUtils } from '@/utils/cache';
 import { STYLES } from '@/components/videoCard/constants/videoCard';
@@ -22,14 +22,14 @@ const getUsernameFromUrl = (url: string): string | null => {
     try {
         const urlObj = new URL(url);
         const pathParts = urlObj.pathname.split('/');
-        
+
         if (url.includes('@')) {
             return pathParts[1].replace('@', '');
         }
-        
+
         return null;
     } catch (error) {
-        console.error('Invalid YouTube URL:', url, (error));
+        console.error('Invalid YouTube URL:', url, error);
         return null;
     }
 };
@@ -50,7 +50,7 @@ const formatDate = (dateString: string): string => {
     return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
     });
 };
 
@@ -61,7 +61,7 @@ const formatLastUpdated = (timestamp: number): string => {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
     });
 };
 
@@ -69,10 +69,10 @@ const formatTimeUntilExpiry = (timestamp: number): string => {
     const expiryTime = timestamp + 24 * 60 * 60 * 1000; // 24 hours from timestamp
     const now = Date.now();
     const timeLeft = expiryTime - now;
-    
+
     const hours = Math.floor(timeLeft / (60 * 60 * 1000));
     const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000));
-    
+
     return `${hours}h ${minutes}m`;
 };
 
@@ -87,7 +87,7 @@ const Channels: React.FC = () => {
         const fetchChannelData = async () => {
             try {
                 const cachedData = cacheUtils.get<Channel[]>(cacheUtils.keys.CHANNELS);
-                
+
                 if (cachedData) {
                     setChannels(cachedData.data);
                     setLastUpdated(cachedData.timestamp);
@@ -104,7 +104,7 @@ const Channels: React.FC = () => {
                         youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
                         channelId: '',
                         profileImage: '',
-                        popularVideos: []
+                        popularVideos: [],
                     },
                     {
                         id: '2',
@@ -113,8 +113,8 @@ const Channels: React.FC = () => {
                         youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
                         channelId: '',
                         profileImage: '',
-                        popularVideos: []
-                    }
+                        popularVideos: [],
+                    },
                 ];
 
                 const updatedChannels = await Promise.all(
@@ -122,7 +122,7 @@ const Channels: React.FC = () => {
                         const username = getUsernameFromUrl(channel.youtubeUrl);
                         console.log(`Processing channel ${channel.name}:`, {
                             url: channel.youtubeUrl,
-                            extractedUsername: username
+                            extractedUsername: username,
                         });
 
                         if (!username) {
@@ -138,10 +138,7 @@ const Channels: React.FC = () => {
                             return channel;
                         }
 
-                        const [channelInfo, popularVideos] = await Promise.all([
-                            getChannelInfo(channelId),
-                            getPopularVideos(channelId)
-                        ]);
+                        const [channelInfo, popularVideos] = await Promise.all([getChannelInfo(channelId), getPopularVideos(channelId)]);
 
                         console.log(`Channel info for ${channel.name}:`, channelInfo);
                         console.log(`Popular videos for ${channel.name}:`, popularVideos);
@@ -157,9 +154,9 @@ const Channels: React.FC = () => {
                             channelInfo,
                             profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
                             videoCount: parseInt(channelInfo.statistics?.videoCount || '0'),
-                            popularVideos
+                            popularVideos,
                         };
-                    })
+                    }),
                 );
 
                 const currentTime = Date.now();
@@ -191,14 +188,8 @@ const Channels: React.FC = () => {
                 <h1 className="text-3xl font-bold text-white">Ambient Content Creators</h1>
                 {lastUpdated && (
                     <div className="text-right">
-                        <p className="text-teal-300 text-sm">
-                            Last updated: {formatLastUpdated(lastUpdated)}
-                        </p>
-                        {isFromCache && (
-                            <p className="text-teal-200 text-xs">
-                                Data will refresh in: {formatTimeUntilExpiry(lastUpdated)}
-                            </p>
-                        )}
+                        <p className="text-teal-300 text-sm">Last updated: {formatLastUpdated(lastUpdated)}</p>
+                        {isFromCache && <p className="text-teal-200 text-xs">Data will refresh in: {formatTimeUntilExpiry(lastUpdated)}</p>}
                     </div>
                 )}
             </div>
@@ -228,13 +219,11 @@ const Channels: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        
+
                         {channel.channelInfo && (
-                            <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                                {channel.channelInfo.description}
-                            </p>
+                            <p className="text-gray-300 text-sm mb-4 line-clamp-2">{channel.channelInfo.description}</p>
                         )}
-                        
+
                         <a
                             href={channel.youtubeUrl}
                             target="_blank"
@@ -248,11 +237,7 @@ const Channels: React.FC = () => {
                             <h3 className="text-lg font-semibold text-white mb-3">Popular Videos</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {channel.popularVideos.map((video) => (
-                                    <div
-                                        key={video.id}
-                                        onClick={() => setSelectedVideo(video.id)}
-                                        className="group cursor-pointer"
-                                    >
+                                    <div key={video.id} onClick={() => setSelectedVideo(video.id)} className="group cursor-pointer">
                                         <div className="relative aspect-video rounded-lg overflow-hidden">
                                             <Image
                                                 src={video.thumbnail}
@@ -262,27 +247,17 @@ const Channels: React.FC = () => {
                                             />
                                             <div className={STYLES.card.overlay}>
                                                 <div className={STYLES.card.playButton.container}>
-                                                    <svg
-                                                        className={STYLES.card.playButton.icon}
-                                                        fill="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
+                                                    <svg className={STYLES.card.playButton.icon} fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M8 5v14l11-7z" />
                                                     </svg>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="mt-2">
-                                            <h4 className="text-sm font-medium text-white line-clamp-2">
-                                                {video.title}
-                                            </h4>
+                                            <h4 className="text-sm font-medium text-white line-clamp-2">{video.title}</h4>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-xs text-gray-400">
-                                                    {formatViewCount(video.viewCount)}
-                                                </span>
-                                                <span className="text-xs text-gray-400">
-                                                    {formatDate(video.publishedAt)}
-                                                </span>
+                                                <span className="text-xs text-gray-400">{formatViewCount(video.viewCount)}</span>
+                                                <span className="text-xs text-gray-400">{formatDate(video.publishedAt)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -292,15 +267,9 @@ const Channels: React.FC = () => {
                     </div>
                 ))}
             </div>
-            {selectedVideo && (
-                <VideoModal
-                    videoId={selectedVideo}
-                    isOpen={!!selectedVideo}
-                    onClose={() => setSelectedVideo(null)}
-                />
-            )}
+            {selectedVideo && <VideoModal videoId={selectedVideo} isOpen={!!selectedVideo} onClose={() => setSelectedVideo(null)} />}
         </div>
     );
 };
 
-export default Channels; 
+export default Channels;

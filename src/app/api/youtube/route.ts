@@ -15,10 +15,7 @@ export async function GET(request: Request) {
     try {
         if (username) {
             if (!validateYouTubeUsername(username)) {
-                return NextResponse.json(
-                    { error: 'Invalid username format' },
-                    { status: 400 }
-                );
+                return NextResponse.json({ error: 'Invalid username format' }, { status: 400 });
             }
 
             const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
@@ -31,10 +28,7 @@ export async function GET(request: Request) {
             const data: YouTubeApiResponse = await response.json();
 
             if (!data.items || data.items.length === 0) {
-                return NextResponse.json(
-                    { error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND },
-                    { status: 404 }
-                );
+                return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND }, { status: 404 });
             }
 
             return NextResponse.json({ channelId: data.items[0].id });
@@ -42,10 +36,7 @@ export async function GET(request: Request) {
 
         if (channelId) {
             if (!validateYouTubeChannelId(channelId)) {
-                return NextResponse.json(
-                    { error: 'Invalid channel ID format' },
-                    { status: 400 }
-                );
+                return NextResponse.json({ error: 'Invalid channel ID format' }, { status: 400 });
             }
 
             if (getPopularVideos) {
@@ -62,10 +53,7 @@ export async function GET(request: Request) {
                 const searchData: YouTubeVideosResponse = await searchResponse.json();
 
                 if (!searchData.items || searchData.items.length === 0) {
-                    return NextResponse.json(
-                        { error: 'No videos found' },
-                        { status: 404 }
-                    );
+                    return NextResponse.json({ error: 'No videos found' }, { status: 404 });
                 }
 
                 const videosWithStats = await Promise.all(
@@ -82,14 +70,15 @@ export async function GET(request: Request) {
                         return {
                             id: video.id.videoId,
                             title: video.snippet.title,
-                            thumbnail: video.snippet.thumbnails.maxres?.url || 
-                                     video.snippet.thumbnails.high?.url || 
-                                     video.snippet.thumbnails.medium?.url || 
-                                     video.snippet.thumbnails.default?.url,
+                            thumbnail:
+                                video.snippet.thumbnails.maxres?.url ||
+                                video.snippet.thumbnails.high?.url ||
+                                video.snippet.thumbnails.medium?.url ||
+                                video.snippet.thumbnails.default?.url,
                             viewCount: statsData.items[0]?.statistics?.viewCount || '0',
                             publishedAt: video.snippet.publishedAt,
                         };
-                    })
+                    }),
                 );
 
                 return NextResponse.json({ videos: videosWithStats });
@@ -106,24 +95,15 @@ export async function GET(request: Request) {
 
             const channelInfo = transformChannelResponse(data);
             if (!channelInfo) {
-                return NextResponse.json(
-                    { error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND },
-                    { status: 404 }
-                );
+                return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND }, { status: 404 });
             }
 
             return NextResponse.json(channelInfo);
         }
 
-        return NextResponse.json(
-            { error: YOUTUBE_API_ERROR_MESSAGES.INVALID_PARAMETERS },
-            { status: 400 }
-        );
+        return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.INVALID_PARAMETERS }, { status: 400 });
     } catch (error) {
         console.error('YouTube API Error:', error);
-        return NextResponse.json(
-            { error: YOUTUBE_API_ERROR_MESSAGES.API_ERROR },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.API_ERROR }, { status: 500 });
     }
-} 
+}

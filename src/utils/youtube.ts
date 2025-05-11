@@ -1,10 +1,7 @@
 import { YOUTUBE_API_BASE } from '@/constants/youtube';
 import { YouTubeApiResponse, ChannelInfo } from '@/types/youtube';
 
-export const buildYouTubeApiUrl = (
-    endpoint: string,
-    params: Record<string, string | number | boolean>
-): string => {
+export const buildYouTubeApiUrl = (endpoint: string, params: Record<string, string | number | boolean>): string => {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
         searchParams.append(key, String(value));
@@ -33,4 +30,4 @@ export const validateYouTubeUsername = (username: string): boolean => {
 
 export const validateYouTubeChannelId = (channelId: string): boolean => {
     return /^UC[a-zA-Z0-9_-]{22}$/.test(channelId);
-}; 
+};

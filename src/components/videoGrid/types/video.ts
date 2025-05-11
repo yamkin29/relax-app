@@ -10,7 +10,7 @@ export interface Video extends RawVideo {
     link: string;
 }
 
-export type SortOption = "title-asc" | "title-desc" | "category-asc" | "category-desc";
+export type SortOption = 'title-asc' | 'title-desc' | 'category-asc' | 'category-desc';
 
 export interface Category {
     id: string;
@@ -22,4 +22,4 @@ export interface Category {
 export interface SortOptionConfig {
     id: SortOption;
     name: string;
-} 
+}

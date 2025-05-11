@@ -52,4 +52,4 @@ export const getPopularVideos = async (channelId: string): Promise<PopularVideo[
         console.error('Error fetching popular videos:', error);
         return [];
     }
-}; 
+};

@@ -79,4 +79,4 @@ export interface PopularVideo {
     thumbnail: string;
     viewCount: string;
     publishedAt: string;
-} 
+}

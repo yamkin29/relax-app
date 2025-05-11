@@ -1,6 +1,6 @@
-import React from "react";
-import {STYLES} from "@/components/videoCard/constants/videoCard";
-import PlayIcon from "@/components/videoCard/components/PlayIcon";
+import React from 'react';
+import { STYLES } from '@/components/videoCard/constants/videoCard';
+import PlayIcon from '@/components/videoCard/components/PlayIcon';
 
 const PlayOverlay: React.FC = () => (
     <div className={STYLES.card.overlay}>
