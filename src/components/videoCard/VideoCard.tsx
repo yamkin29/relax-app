@@ -18,14 +18,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, title }) => (
         className={STYLES.card.wrapper}
     >
         <div className={STYLES.card.container}>
-            <div className="relative w-full h-0 pb-[56.25%]"> {/* 16:9 соотношение */}
+            <div className="relative w-full h-0 pb-[56.25%]">
                 <Image
                     src={thumbnail}
                     alt={title ?? 'Video thumbnail'}
                     fill
                     sizes="(max-width: 640px) 100vw, 640px"
                     className={STYLES.card.image}
-                    priority={false}     // для LCP можно поставить true, если это критичная картинка
+                    priority={false}
                 />
                 <PlayOverlay />
             </div>
