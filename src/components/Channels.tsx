@@ -29,7 +29,7 @@ const getUsernameFromUrl = (url: string): string | null => {
         
         return null;
     } catch (error) {
-        console.error('Invalid YouTube URL:', url);
+        console.error('Invalid YouTube URL:', url, (error));
         return null;
     }
 };
