@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { YOUTUBE_API_KEY } from '@/constants/youtube';
 import { YOUTUBE_API_ENDPOINTS, YOUTUBE_API_PARTS, YOUTUBE_API_ERROR_MESSAGES } from '@/constants/youtube';
-import { buildYouTubeApiUrl, transformChannelResponse, validateYouTubeUsername, validateYouTubeChannelId } from '@/utils/youtube';
+import { buildYouTubeApiUrl, transformChannelResponse, validateYouTubeChannelId } from '@/utils/youtube';
 import { YouTubeApiResponse, YouTubeVideosResponse } from '@/types/youtube';
 
 export async function GET(request: Request) {
@@ -14,24 +14,75 @@ export async function GET(request: Request) {
 
     try {
         if (username) {
-            if (!validateYouTubeUsername(username)) {
-                return NextResponse.json({ error: 'Invalid username format' }, { status: 400 });
+            if (validateYouTubeChannelId(username)) {
+                console.warn('Username is a channel ID, using it directly');
+                const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
+                    part: [YOUTUBE_API_PARTS.SNIPPET, YOUTUBE_API_PARTS.STATISTICS].join(','),
+                    id: username,
+                    key: YOUTUBE_API_KEY,
+                });
+
+                console.warn('Fetching channel by ID:', url);
+                const response = await fetch(url);
+                const data: YouTubeApiResponse = await response.json();
+
+                if (!response.ok) {
+                    console.error('YouTube API Error:', data);
+                    return NextResponse.json({ error: data.error?.message || 'Failed to fetch channel' }, { status: response.status });
+                }
+
+                if (!data.items || data.items.length === 0) {
+                    console.warn('No channel found for ID:', username);
+                    return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND }, { status: 404 });
+                }
+
+                return NextResponse.json({ channelId: data.items[0].id });
             }
 
-            const url = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
-                part: YOUTUBE_API_PARTS.ID,
-                forUsername: username,
+            console.warn('Searching for channel by name:', username);
+            const searchUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.SEARCH, {
+                part: YOUTUBE_API_PARTS.SNIPPET,
+                q: username,
+                type: 'channel',
+                maxResults: 1,
                 key: YOUTUBE_API_KEY,
             });
 
-            const response = await fetch(url);
-            const data: YouTubeApiResponse = await response.json();
+            console.warn('Search URL:', searchUrl);
+            const searchResponse = await fetch(searchUrl);
+            const searchData = await searchResponse.json();
 
-            if (!data.items || data.items.length === 0) {
+            if (!searchResponse.ok) {
+                console.error('Search API Error:', searchData);
+                return NextResponse.json(
+                    { error: searchData.error?.message || 'Failed to search channel' },
+                    { status: searchResponse.status },
+                );
+            }
+
+            if (!searchData.items || searchData.items.length === 0) {
+                console.warn('No channel found in search for:', username);
                 return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND }, { status: 404 });
             }
 
-            return NextResponse.json({ channelId: data.items[0].id });
+            const foundChannelId = searchData.items[0].id.channelId;
+            console.warn('Found channel ID from search:', foundChannelId);
+
+            const channelUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.CHANNELS, {
+                part: [YOUTUBE_API_PARTS.SNIPPET, YOUTUBE_API_PARTS.STATISTICS].join(','),
+                id: foundChannelId,
+                key: YOUTUBE_API_KEY,
+            });
+
+            const channelResponse = await fetch(channelUrl);
+            const channelData: YouTubeApiResponse = await channelResponse.json();
+
+            if (!channelResponse.ok || !channelData.items || channelData.items.length === 0) {
+                console.warn('Failed to get channel details for ID:', foundChannelId);
+                return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.CHANNEL_NOT_FOUND }, { status: 404 });
+            }
+
+            return NextResponse.json({ channelId: foundChannelId });
         }
 
         if (channelId) {

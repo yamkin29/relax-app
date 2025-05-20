@@ -21,12 +21,31 @@ interface Channel {
 const getUsernameFromUrl = (url: string): string | null => {
     try {
         const urlObj = new URL(url);
-        const pathParts = urlObj.pathname.split('/');
+        const pathParts = urlObj.pathname.split('/').filter(Boolean);
+
+        console.warn('Parsing URL:', {
+            url,
+            pathParts,
+            hasAt: url.includes('@'),
+        });
 
         if (url.includes('@')) {
-            return pathParts[1].replace('@', '');
+            const username = pathParts[0].replace('@', '');
+            console.warn('Extracted @username:', username);
+            return username;
         }
 
+        if (pathParts[0] === 'channel' && pathParts[1]?.startsWith('UC')) {
+            console.warn('Extracted channel ID:', pathParts[1]);
+            return pathParts[1];
+        }
+
+        if (pathParts[0] === 'c') {
+            console.warn('Extracted /c/ username:', pathParts[1]);
+            return pathParts[1];
+        }
+
+        console.warn('No valid username or channel ID found in URL');
         return null;
     } catch (error) {
         console.error('Invalid YouTube URL:', url, error);
@@ -108,9 +127,45 @@ const Channels: React.FC = () => {
                     },
                     {
                         id: '2',
+                        name: 'Eternal Depth',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@EternalDepth',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [],
+                    },
+                    {
+                        id: '3',
                         name: 'Cosmic Echo',
-                        videoCount: 280,
+                        videoCount: 0,
                         youtubeUrl: 'https://www.youtube.com/@CosmicEcho12',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [],
+                    },
+                    {
+                        id: '4',
+                        name: 'Deep Calm Melodies',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@DeepCalmMelodies',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [],
+                    },
+                    {
+                        id: '5',
+                        name: 'Music Lab Chill',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@MusicLabChill',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [],
+                    },
+                    {
+                        id: '6',
+                        name: 'Rainy Guy',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@RainyGuy',
                         channelId: '',
                         profileImage: '',
                         popularVideos: [],
@@ -119,6 +174,7 @@ const Channels: React.FC = () => {
 
                 const updatedChannels = await Promise.all(
                     channelsData.map(async (channel) => {
+                        console.warn(`Starting to process channel: ${channel.name}`);
                         const username = getUsernameFromUrl(channel.youtubeUrl);
                         console.warn(`Processing channel ${channel.name}:`, {
                             url: channel.youtubeUrl,
@@ -130,32 +186,42 @@ const Channels: React.FC = () => {
                             return channel;
                         }
 
-                        const channelId = await getChannelIdByUsername(username);
-                        console.warn(`Channel ID for ${channel.name}:`, channelId);
+                        try {
+                            console.warn(`Attempting to get channel ID for ${channel.name} with username: ${username}`);
+                            const channelId = await getChannelIdByUsername(username);
+                            console.warn(`Channel ID for ${channel.name}:`, channelId);
 
-                        if (!channelId) {
-                            console.warn(`No channel ID found for ${channel.name}`);
+                            if (!channelId) {
+                                console.warn(`No channel ID found for ${channel.name}`);
+                                return channel;
+                            }
+
+                            console.warn(`Fetching channel info and popular videos for ${channel.name}`);
+                            const [channelInfo, popularVideos] = await Promise.all([
+                                getChannelInfo(channelId),
+                                getPopularVideos(channelId),
+                            ]);
+
+                            console.warn(`Channel info for ${channel.name}:`, channelInfo);
+                            console.warn(`Popular videos for ${channel.name}:`, popularVideos);
+
+                            if (!channelInfo) {
+                                console.warn(`No channel info found for ${channel.name}`);
+                                return channel;
+                            }
+
+                            return {
+                                ...channel,
+                                channelId,
+                                channelInfo,
+                                profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
+                                videoCount: parseInt(channelInfo.statistics?.videoCount || '0'),
+                                popularVideos,
+                            };
+                        } catch (error) {
+                            console.error(`Error processing channel ${channel.name}:`, error);
                             return channel;
                         }
-
-                        const [channelInfo, popularVideos] = await Promise.all([getChannelInfo(channelId), getPopularVideos(channelId)]);
-
-                        console.warn(`Channel info for ${channel.name}:`, channelInfo);
-                        console.warn(`Popular videos for ${channel.name}:`, popularVideos);
-
-                        if (!channelInfo) {
-                            console.warn(`No channel info found for ${channel.name}`);
-                            return channel;
-                        }
-
-                        return {
-                            ...channel,
-                            channelId,
-                            channelInfo,
-                            profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
-                            videoCount: parseInt(channelInfo.statistics?.videoCount || '0'),
-                            popularVideos,
-                        };
                     }),
                 );
 

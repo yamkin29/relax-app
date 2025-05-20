@@ -19,6 +19,10 @@ export const getChannelInfo = async (channelId: string): Promise<ChannelInfo | n
 };
 
 export const getChannelIdByUsername = async (username: string): Promise<string | null> => {
+    if (validateYouTubeChannelId(username)) {
+        return username;
+    }
+
     if (!validateYouTubeUsername(username)) {
         throw new Error('Invalid username format');
     }

@@ -53,6 +53,10 @@ export interface YouTubeApiResponse {
     };
     nextPageToken?: string;
     prevPageToken?: string;
+    error?: {
+        message: string;
+        code: number;
+    };
 }
 
 export interface YouTubeVideosResponse {
