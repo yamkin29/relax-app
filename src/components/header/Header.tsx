@@ -3,7 +3,6 @@ import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { HEADER_TEXTS, STYLES } from '@/components/header/constants/header';
 import NavLink from '@/components/header/components/NavLink';
-import ActionButton from '@/components/header/components/ActionButton';
 
 const Header: React.FC = () => {
     const router = useRouter();
@@ -30,8 +29,10 @@ const Header: React.FC = () => {
                         </NavLink>
                     </nav>
                     <div className={STYLES.actions}>
+                        {/* Temporarily hidden until implementation is ready
                         <ActionButton>{HEADER_TEXTS.SETTINGS}</ActionButton>
                         <ActionButton variant="primary">{HEADER_TEXTS.LOGIN}</ActionButton>
+                        */}
                     </div>
                 </div>
             </div>
