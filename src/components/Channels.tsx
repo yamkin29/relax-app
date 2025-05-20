@@ -108,9 +108,9 @@ const Channels: React.FC = () => {
                     },
                     {
                         id: '2',
-                        name: 'Relaxing White Noise',
+                        name: 'Cosmic Echo',
                         videoCount: 280,
-                        youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
+                        youtubeUrl: 'https://www.youtube.com/@CosmicEcho12',
                         channelId: '',
                         profileImage: '',
                         popularVideos: [],
