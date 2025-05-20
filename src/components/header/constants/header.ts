@@ -1,6 +1,7 @@
 export const HEADER_TEXTS = {
     VIDEOS: 'Videos',
     CHANNELS: 'Channels',
+    ABOUT: 'About',
     SETTINGS: 'Settings',
     LOGIN: 'Login',
 } as const;

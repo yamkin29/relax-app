@@ -16,6 +16,10 @@ const Header: React.FC = () => {
         router.push('/channels');
     };
 
+    const handleAboutClick = () => {
+        router.push('/about');
+    };
+
     return (
         <header className={STYLES.header}>
             <div className={STYLES.container}>
@@ -26,6 +30,9 @@ const Header: React.FC = () => {
                         </NavLink>
                         <NavLink isActive={pathname === '/channels'} onClick={handleChannelsClick}>
                             {HEADER_TEXTS.CHANNELS}
+                        </NavLink>
+                        <NavLink isActive={pathname === '/about'} onClick={handleAboutClick}>
+                            {HEADER_TEXTS.ABOUT}
                         </NavLink>
                     </nav>
                     <div className={STYLES.actions}>
