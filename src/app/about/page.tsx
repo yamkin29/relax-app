@@ -12,12 +12,12 @@ export default function AboutPage() {
                         <p className="text-gray-200">
                             Relax‑App is a collection of atmospheric videos with subtle music, created for those who love to relax, work, or
                             read with a pleasant visual background. We manually curate the most harmonious ambient videos from YouTube and
-                            gather them in one place, so you don't have to spend time searching.
+                            gather them in one place, so you don&apos;t have to spend time searching.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-white mb-4">What You'll Find on the Site</h2>
+                        <h2 className="text-xl font-semibold text-white mb-4">What You&apos;ll Find on the Site</h2>
                         <ul className="list-disc list-inside text-gray-200 space-y-2">
                             <li>Video playlists — peaceful landscapes, rainy cafes, fireplace scenes, and other thematic content</li>
                             <li>Channel catalog — a list of YouTube creators who regularly publish similar content</li>
@@ -39,8 +39,8 @@ export default function AboutPage() {
                     <section>
                         <h2 className="text-xl font-semibold text-white mb-4">How to Help the Project</h2>
                         <p className="text-gray-200 mb-4">
-                            Do you have an idea to make Relax‑App better? Want to suggest a favorite channel or video? Write to us! We're
-                            happy to consider any suggestions:
+                            Do you have an idea to make Relax‑App better? Want to suggest a favorite channel or video? Write to us!
+                            We&apos;re happy to consider any suggestions:
                         </p>
                         <ul className="list-disc list-inside text-gray-200 space-y-2">
                             <li>
