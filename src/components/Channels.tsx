@@ -118,9 +118,9 @@ const Channels: React.FC = () => {
                 const channelsData: Channel[] = [
                     {
                         id: '1',
-                        name: 'Relaxing White Noise',
-                        videoCount: 280,
-                        youtubeUrl: 'https://youtube.com/@RelaxingWhiteNoise',
+                        name: 'Ambient Outpost',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@ambientoutpost',
                         channelId: '',
                         profileImage: '',
                         popularVideos: [],
