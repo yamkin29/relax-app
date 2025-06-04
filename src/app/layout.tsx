@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body suppressHydrationWarning className={`${inter.className} bg-teal-800 min-h-screen text-white`}>
+            <body suppressHydrationWarning className={`${inter.className} bg-teal-800 min-h-screen text-white flex flex-col`}>
                 <Header />
-                {children}
+                <main className="flex-grow">{children}</main>
                 <SpeedInsights />
                 <Analytics />
                 <Footer />
