@@ -7,7 +7,7 @@ export const STYLES = {
             'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center gap-4',
         playButton: {
             container:
-                'w-12 h-12 rounded-full bg-red-600 flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 hover:bg-red-700',
+                'w-12 h-12 rounded-full bg-white flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 hover:bg-gray-200',
             rutubeContainer:
                 'w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 hover:bg-blue-700',
             icon: 'w-6 h-6 text-white',

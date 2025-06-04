@@ -1,11 +1,7 @@
 import React from 'react';
-import { STYLES } from '@/components/videoCard/constants/videoCard';
+import Image from 'next/image';
 
-const PlayIcon: React.FC = () => (
-    <svg className={STYLES.card.playButton.icon} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M8 5v14l11-7z" />
-    </svg>
-);
+const PlayIcon: React.FC = () => <Image src="/youtube-color-svgrepo-com.svg" alt="Youtube" width={24} height={24} className="w-6 h-6" />;
 
 PlayIcon.displayName = 'PlayIcon';
 
