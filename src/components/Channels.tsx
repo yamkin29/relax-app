@@ -170,6 +170,15 @@ const Channels: React.FC = () => {
                         profileImage: '',
                         popularVideos: [],
                     },
+                    {
+                        id: '7',
+                        name: 'Meisio',
+                        videoCount: 0,
+                        youtubeUrl: 'https://www.youtube.com/@Meisio',
+                        channelId: '',
+                        profileImage: '',
+                        popularVideos: [],
+                    },
                 ];
 
                 const updatedChannels = await Promise.all(
