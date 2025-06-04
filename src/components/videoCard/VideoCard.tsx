@@ -8,10 +8,11 @@ import VideoModal from '../VideoModal';
 interface VideoCardProps {
     thumbnail: string;
     link: string;
+    rutubeLink?: string;
     title?: string;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, title }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, rutubeLink, title }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const videoId = link.split('v=')[1]?.split('&')[0];
@@ -20,6 +21,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, title }) => {
         e.preventDefault();
         if (videoId) {
             setIsModalOpen(true);
+        }
+    };
+
+    const handleRutubeClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (rutubeLink) {
+            window.open(rutubeLink, '_blank');
         }
     };
 
@@ -36,7 +45,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, title }) => {
                             className={STYLES.card.image}
                             priority={false}
                         />
-                        <PlayOverlay />
+                        <PlayOverlay onRutubeClick={rutubeLink ? handleRutubeClick : undefined} />
                     </div>
                     {title && (
                         <div className={STYLES.card.title.container}>

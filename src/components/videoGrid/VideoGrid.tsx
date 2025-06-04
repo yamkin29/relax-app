@@ -11,6 +11,7 @@ const videos: Video[] = (rawVideos as RawVideo[]).map((video) => ({
     ...video,
     thumbnail: `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`,
     link: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+    rutubeLink: video.rutubeId ? `https://rutube.ru/video/${video.rutubeId}/` : undefined,
 }));
 
 const collator = new Intl.Collator('en-US', { numeric: true, sensitivity: 'base' });
