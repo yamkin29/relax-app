@@ -4,6 +4,7 @@ export const HEADER_TEXTS = {
     ABOUT: 'About',
     SETTINGS: 'Settings',
     LOGIN: 'Login',
+    RUTUBE: 'Rutube',
 } as const;
 
 export const STYLES = {
@@ -16,4 +17,5 @@ export const STYLES = {
         base: 'px-4 py-2 text-white hover:text-teal-200 transition-colors',
         primary: 'px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors',
     },
+    rutubeLink: 'text-white hover:text-teal-200 transition-colors',
 } as const;
