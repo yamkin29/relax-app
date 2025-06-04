@@ -12,9 +12,11 @@ const PlayOverlay: React.FC<PlayOverlayProps> = ({ onRutubeClick }) => (
         <div className={STYLES.card.playButton.container}>
             <PlayIcon />
         </div>
-        <div className={STYLES.card.playButton.rutubeContainer} onClick={onRutubeClick}>
-            <RutubeIcon />
-        </div>
+        {onRutubeClick && (
+            <div className={STYLES.card.playButton.rutubeContainer} onClick={onRutubeClick}>
+                <RutubeIcon />
+            </div>
+        )}
     </div>
 );
 
