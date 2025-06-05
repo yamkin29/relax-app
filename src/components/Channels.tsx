@@ -154,9 +154,9 @@ const Channels: React.FC = () => {
                     },
                     {
                         id: '5',
-                        name: 'Music Lab Chill',
+                        name: 'Futurescapes - Sci Fi Ambience',
                         videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@MusicLabChill',
+                        youtubeUrl: 'https://www.youtube.com/@Futurescapes-SciFiAmbience',
                         channelId: '',
                         profileImage: '',
                         popularVideos: [],
