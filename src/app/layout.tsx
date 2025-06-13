@@ -6,6 +6,9 @@ import Header from '@/components/header/Header';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import Footer from '@/components/Footer';
+import 'antd/dist/reset.css';
+import ThemeProvider from '@/components/ThemeProvider';
+import '@ant-design/v5-patch-for-react-19';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,11 +24,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body suppressHydrationWarning className={`${inter.className} bg-teal-800 min-h-screen text-white flex flex-col`}>
-                <Header />
-                <main className="flex-grow">{children}</main>
-                <SpeedInsights />
-                <Analytics />
-                <Footer />
+                <ThemeProvider>
+                    <Header />
+                    <main className="flex-grow">{children}</main>
+                    <SpeedInsights />
+                    <Analytics />
+                    <Footer />
+                </ThemeProvider>
             </body>
         </html>
     );
