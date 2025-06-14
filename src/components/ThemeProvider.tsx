@@ -41,9 +41,46 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
                 theme={{
                     algorithm: mode === 'light' ? antdTheme.defaultAlgorithm : antdTheme.darkAlgorithm,
                     token: {
-                        // Здесь настраиваются базовые опции для моих компонентов, чтобы был единый стиль у всех
+                        // — Цвета
                         colorPrimary: '#0e4a40',
+                        colorText: '#ffffff',
+                        colorTextSecondary: 'rgba(255,255,255,0.85)',
+
+                        // Делаем прозрачными фоны Layout и всех контейнеров
+                        colorBgLayout: 'transparent',
+                        colorBgContainer: 'transparent',
+
+                        // — Скругления
                         borderRadius: 12,
+                        borderRadiusSM: 8,
+                        borderRadiusLG: 16,
+
+                        // — Размеры шрифтов
+                        fontSize: 16,
+                        fontSizeSM: 14,
+                        fontSizeLG: 18,
+
+                        // — Внутренние отступы компонентов
+                        padding: 24,
+                        paddingSM: 16,
+                        paddingLG: 32,
+
+                        // — Высота контролов (Input, Button)
+                        controlHeight: 40,
+                        controlHeightSM: 32,
+                        controlHeightLG: 48,
+                    },
+
+                    // Опционально: если нужно **точечно** переопределить какой-то компонент
+                    components: {
+                        Button: {
+                            controlHeight: 48, // все кнопки будут выше
+                            borderRadius: 12,
+                        },
+                        Card: {
+                            padding: 24, // единый padding для всех Card
+                            borderRadius: 12,
+                        },
                     },
                 }}
             >
