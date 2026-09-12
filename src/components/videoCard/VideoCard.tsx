@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { STYLES } from '@/components/videoCard/constants/videoCard';
 import PlayOverlay from '@/components/videoCard/components/PlayOverlay';
-import VideoModal from '../VideoModal';
-import RutubeModal from '../RutubeModal';
+import VideoModal from '@/components/video-modal/VideoModal';
+import RutubeModal from '@/components/rutube-modal/RutubeModal';
 
 interface VideoCardProps {
     thumbnail: string;
