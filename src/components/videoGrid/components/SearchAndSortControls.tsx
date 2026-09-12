@@ -15,6 +15,7 @@ const SearchAndSortControls = ({ searchQuery, setSearchQuery, sortBy, setSortBy 
                 <input
                     type="text"
                     placeholder="Search videos..."
+                    aria-label="Search videos"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full px-4 py-2 rounded-lg bg-teal-800 text-white placeholder-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -24,6 +25,7 @@ const SearchAndSortControls = ({ searchQuery, setSearchQuery, sortBy, setSortBy 
             <div className="w-full sm:w-48">
                 <select
                     value={sortBy}
+                    aria-label="Sort videos"
                     onChange={(e) => setSortBy(e.target.value as SortOption)}
                     className="w-full px-4 py-2 rounded-lg bg-teal-800 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >

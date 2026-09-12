@@ -28,6 +28,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory, selectedTags, toggleTa
                         {isOpen && (
                             <button
                                 onClick={onToggle}
+                                aria-label="Hide sidebar"
                                 className="p-2 rounded-lg bg-teal-700 text-white hover:bg-teal-600 transition-colors shadow-lg"
                             >
                                 <svg
@@ -84,6 +85,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory, selectedTags, toggleTa
             {!isOpen && (
                 <button
                     onClick={onToggle}
+                    aria-label="Show sidebar"
                     className="fixed top-16 left-4 z-50 p-2 rounded-lg bg-teal-800/80 text-white hover:bg-teal-700 transition-colors shadow-lg border-2 border-teal-600/50 backdrop-blur-sm"
                 >
                     <svg className="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

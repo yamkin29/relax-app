@@ -157,6 +157,7 @@ const Channels: React.FC = () => {
                                     src={channel.profileImage || '/default-channel.jpg'}
                                     alt={channel.name}
                                     fill
+                                    sizes="64px"
                                     className="object-cover"
                                     onError={(e) => {
                                         const target = e.target as HTMLImageElement;
@@ -192,22 +193,34 @@ const Channels: React.FC = () => {
                             <h3 className="text-lg font-semibold text-white mb-3">Popular Videos</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {channel.popularVideos.map((video) => (
-                                    <div key={video.id} onClick={() => setSelectedVideo(video.id)} className="group cursor-pointer">
-                                        <div className="relative aspect-video rounded-lg overflow-hidden">
-                                            <Image
-                                                src={video.thumbnail}
-                                                alt={video.title}
-                                                fill
-                                                className="object-cover transition-transform group-hover:scale-105"
-                                            />
-                                            <div className={STYLES.card.overlay}>
-                                                <div className={STYLES.card.playButton.container}>
-                                                    <svg className={STYLES.card.playButton.icon} fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M8 5v14l11-7z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div key={video.id}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedVideo(video.id)}
+                                            aria-label={`Play ${video.title}`}
+                                            className="group block w-full cursor-pointer text-left"
+                                        >
+                                            <span className="relative block aspect-video rounded-lg overflow-hidden">
+                                                <Image
+                                                    src={video.thumbnail}
+                                                    alt=""
+                                                    fill
+                                                    sizes="(max-width: 768px) 45vw, 220px"
+                                                    className="object-cover transition-transform group-hover:scale-105"
+                                                />
+                                                <span className={STYLES.card.overlay}>
+                                                    <span className={STYLES.card.playButton.container}>
+                                                        <svg
+                                                            className={STYLES.card.playButton.icon}
+                                                            fill="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path d="M8 5v14l11-7z" />
+                                                        </svg>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </button>
                                         <div className="mt-2">
                                             <h4 className="text-sm font-medium text-white line-clamp-2">{video.title}</h4>
                                             <div className="flex items-center gap-2 mt-1">

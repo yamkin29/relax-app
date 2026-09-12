@@ -13,9 +13,9 @@ const PlayOverlay: React.FC<PlayOverlayProps> = ({ onRutubeClick }) => (
             <PlayIcon />
         </div>
         {onRutubeClick && (
-            <div className={STYLES.card.playButton.rutubeContainer} onClick={onRutubeClick}>
+            <button type="button" onClick={onRutubeClick} aria-label="Watch on Rutube" className={STYLES.card.playButton.rutubeContainer}>
                 <RutubeIcon />
-            </div>
+            </button>
         )}
     </div>
 );
