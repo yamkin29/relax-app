@@ -9,48 +9,66 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, label, children }) => {
-    const dialogRef = useRef<HTMLDivElement>(null);
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+
+        if (isOpen && !dialog.open) {
+            dialog.showModal();
+        } else if (!isOpen && dialog.open) {
+            dialog.close();
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+
+        // Escape: нативный cancel не закрываем напрямую — идём через состояние React,
+        // чтобы владелец модалки updated своё isOpen.
+        const handleCancel = (e: Event) => {
+            e.preventDefault();
+            onClose();
+        };
+        const handleClose = () => onClose();
+
+        dialog.addEventListener('cancel', handleCancel);
+        dialog.addEventListener('close', handleClose);
+
+        return () => {
+            dialog.removeEventListener('cancel', handleCancel);
+            dialog.removeEventListener('close', handleClose);
+        };
+    }, [onClose]);
 
     useEffect(() => {
         if (!isOpen) return;
 
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                onClose();
-            }
-        };
-
-        document.addEventListener('keydown', handleEscape);
         document.body.style.overflow = 'hidden';
-        dialogRef.current?.focus();
-
         return () => {
-            document.removeEventListener('keydown', handleEscape);
             document.body.style.overflow = '';
         };
-    }, [isOpen, onClose]);
+    }, [isOpen]);
 
-    const handleBackdropClick = (e: React.MouseEvent) => {
-        if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
-            onClose();
-        }
-    };
-
+    // Закрытый диалог не рендерим совсем: иначе плееры внутри карточек
+    // монтировались бы все сразу (29 iframe на /videos).
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={handleBackdropClick}>
-            <div
-                ref={dialogRef}
-                role="dialog"
-                aria-modal="true"
-                aria-label={label}
-                tabIndex={-1}
-                className="relative w-full max-w-4xl aspect-video bg-teal-800 rounded-lg overflow-hidden focus:outline-none"
-            >
-                {children}
-            </div>
-        </div>
+        <dialog
+            ref={dialogRef}
+            aria-label={label}
+            onClick={(e) => {
+                if (e.target === dialogRef.current) {
+                    onClose();
+                }
+            }}
+            className="fixed inset-0 m-auto w-full max-w-4xl aspect-video bg-teal-800 rounded-lg overflow-hidden p-0 border-0 focus:outline-none [&::backdrop]:bg-black/80"
+        >
+            {children}
+        </dialog>
     );
 };
 
