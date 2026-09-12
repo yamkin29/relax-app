@@ -10,6 +10,8 @@ export interface RawChannel {
 export interface Channel extends RawChannel {
     videoCount: number;
     profileImage: string;
+    /** true, если данные канала загрузить не удалось — карточка покажет ошибку с retry */
+    failed?: boolean;
     channelInfo?: ChannelInfo;
     popularVideos: PopularVideo[];
 }
