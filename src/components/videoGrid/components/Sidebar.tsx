@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { categories } from '@/components/videoGrid/constants/video';
 
 interface SidebarProps {
@@ -11,6 +12,8 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ selectedCategory, setSelectedCategory, selectedTags, toggleTag, allTags, isOpen, onToggle }: SidebarProps) => {
+    const selectedTagSet = useMemo(() => new Set(selectedTags), [selectedTags]);
+
     return (
         <>
             <div
@@ -67,9 +70,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory, selectedTags, toggleTa
                                     key={tag}
                                     onClick={() => toggleTag(tag)}
                                     className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                                        selectedTags.includes(tag)
-                                            ? 'bg-teal-600 text-white'
-                                            : 'bg-teal-800 text-teal-100 hover:bg-teal-700'
+                                        selectedTagSet.has(tag) ? 'bg-teal-600 text-white' : 'bg-teal-800 text-teal-100 hover:bg-teal-700'
                                     }`}
                                 >
                                     #{tag}

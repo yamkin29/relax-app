@@ -9,36 +9,51 @@ const CACHE_KEYS = {
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+const readCache = <T>(key: string): CacheData<T> | null => {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+
+    try {
+        return JSON.parse(cached) as CacheData<T>;
+    } catch {
+        localStorage.removeItem(key);
+        return null;
+    }
+};
+
+const isEntryExpired = (timestamp: number): boolean => {
+    return Date.now() - timestamp > CACHE_DURATION;
+};
+
 export const cacheUtils = {
     set: <T>(key: string, data: T): void => {
         const cacheData: CacheData<T> = {
             data,
             timestamp: Date.now(),
         };
-        localStorage.setItem(key, JSON.stringify(cacheData));
+
+        try {
+            localStorage.setItem(key, JSON.stringify(cacheData));
+        } catch (error) {
+            console.error(`Failed to cache data for key "${key}":`, error);
+        }
     },
 
     get: <T>(key: string): { data: T; timestamp: number } | null => {
-        const cached = localStorage.getItem(key);
-        if (!cached) return null;
+        const cacheData = readCache<T>(key);
+        if (!cacheData) return null;
 
-        const cacheData: CacheData<T> = JSON.parse(cached);
-        const isExpired = Date.now() - cacheData.timestamp > CACHE_DURATION;
-
-        if (isExpired) {
+        if (isEntryExpired(cacheData.timestamp)) {
             localStorage.removeItem(key);
             return null;
         }
 
-        return cacheData;
+        return { data: cacheData.data, timestamp: cacheData.timestamp };
     },
 
     isExpired: (key: string): boolean => {
-        const cached = localStorage.getItem(key);
-        if (!cached) return true;
-
-        const { timestamp }: CacheData<unknown> = JSON.parse(cached);
-        return Date.now() - timestamp > CACHE_DURATION;
+        const cacheData = readCache<unknown>(key);
+        return !cacheData || isEntryExpired(cacheData.timestamp);
     },
 
     keys: CACHE_KEYS,

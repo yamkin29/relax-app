@@ -11,6 +11,26 @@ interface VideoStatisticsItem {
     statistics?: { viewCount: string };
 }
 
+class YouTubeApiError extends Error {
+    constructor(
+        message: string,
+        readonly status: number,
+    ) {
+        super(message);
+    }
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+    const response = await fetch(url, FETCH_OPTIONS);
+
+    if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { error?: { message?: string } } | null;
+        throw new YouTubeApiError(body?.error?.message || `YouTube API responded with status ${response.status}`, response.status);
+    }
+
+    return response.json() as Promise<T>;
+}
+
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
@@ -32,8 +52,7 @@ export async function GET(request: Request) {
                     key: YOUTUBE_API_KEY,
                 });
 
-                const searchResponse = await fetch(searchUrl, FETCH_OPTIONS);
-                const searchData: YouTubeVideosResponse = await searchResponse.json();
+                const searchData = await fetchJson<YouTubeVideosResponse>(searchUrl);
 
                 if (!searchData.items || searchData.items.length === 0) {
                     return NextResponse.json({ error: 'No videos found' }, { status: 404 });
@@ -45,8 +64,8 @@ export async function GET(request: Request) {
                     key: YOUTUBE_API_KEY,
                 });
 
-                const statsResponse = await fetch(statsUrl, FETCH_OPTIONS);
-                const statsData: { items?: VideoStatisticsItem[] } = await statsResponse.json();
+                const statsData = await fetchJson<{ items?: VideoStatisticsItem[] }>(statsUrl);
+
                 const statsById = new Map((statsData.items ?? []).map((item) => [item.id, item]));
 
                 const videosWithStats = searchData.items.map((video) => ({
@@ -70,8 +89,7 @@ export async function GET(request: Request) {
                 key: YOUTUBE_API_KEY,
             });
 
-            const response = await fetch(url, FETCH_OPTIONS);
-            const data: YouTubeApiResponse = await response.json();
+            const data = await fetchJson<YouTubeApiResponse>(url);
 
             const channelInfo = transformChannelResponse(data);
             if (!channelInfo) {
@@ -83,6 +101,11 @@ export async function GET(request: Request) {
 
         return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.INVALID_PARAMETERS }, { status: 400 });
     } catch (error) {
+        if (error instanceof YouTubeApiError) {
+            console.error('YouTube API Error:', error.message);
+            return NextResponse.json({ error: error.message }, { status: error.status });
+        }
+
         console.error('YouTube API Error:', error);
         return NextResponse.json({ error: YOUTUBE_API_ERROR_MESSAGES.API_ERROR }, { status: 500 });
     }
