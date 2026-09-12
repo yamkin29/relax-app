@@ -1,47 +1,28 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getChannelInfo, getChannelIdByUsername, getPopularVideos } from '@/services/youtube';
+import { getChannelInfo, getPopularVideos } from '@/services/youtube';
 import { ChannelInfo, PopularVideo } from '@/types/youtube';
+import rawChannels from '@/data/channels.json';
 import VideoModal from './VideoModal';
 import { cacheUtils } from '@/utils/cache';
 import { STYLES } from '@/components/videoCard/constants/videoCard';
 
-interface Channel {
+interface RawChannel {
     id: string;
     name: string;
-    videoCount: number;
-    youtubeUrl: string;
     channelId: string;
+    youtubeUrl: string;
+}
+
+interface Channel extends RawChannel {
+    videoCount: number;
     profileImage: string;
     channelInfo?: ChannelInfo;
     popularVideos: PopularVideo[];
 }
 
-const getUsernameFromUrl = (url: string): string | null => {
-    try {
-        const urlObj = new URL(url);
-        const pathParts = urlObj.pathname.split('/').filter(Boolean);
-
-        if (url.includes('@')) {
-            const username = pathParts[0].replace('@', '');
-            return username;
-        }
-
-        if (pathParts[0] === 'channel' && pathParts[1]?.startsWith('UC')) {
-            return pathParts[1];
-        }
-
-        if (pathParts[0] === 'c') {
-            return pathParts[1];
-        }
-
-        return null;
-    } catch (error) {
-        console.error('Invalid YouTube URL:', url, error);
-        return null;
-    }
-};
+const EMPTY_CHANNEL_STATE = { videoCount: 0, profileImage: '', popularVideos: [] as PopularVideo[] };
 
 const formatViewCount = (count: string): string => {
     const num = parseInt(count);
@@ -105,99 +86,22 @@ const Channels: React.FC = () => {
                     return;
                 }
 
-                const channelsData: Channel[] = [
-                    {
-                        id: '1',
-                        name: 'Ambient Outpost',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@ambientoutpost',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '2',
-                        name: 'Eternal Depth',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@EternalDepth',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '3',
-                        name: 'Cosmic Echo',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@CosmicEcho12',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '4',
-                        name: 'Deep Calm Melodies',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@DeepCalmMelodies',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '5',
-                        name: 'Futurescapes - Sci Fi Ambience',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@Futurescapes-SciFiAmbience',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '6',
-                        name: 'Rainy Guy',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@RainyGuy',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                    {
-                        id: '7',
-                        name: 'Meisio',
-                        videoCount: 0,
-                        youtubeUrl: 'https://www.youtube.com/@Meisio',
-                        channelId: '',
-                        profileImage: '',
-                        popularVideos: [],
-                    },
-                ];
+                const channelsData = rawChannels as RawChannel[];
 
                 const updatedChannels = await Promise.all(
-                    channelsData.map(async (channel) => {
-                        const username = getUsernameFromUrl(channel.youtubeUrl);
-
-                        if (!username) {
-                            return channel;
-                        }
-
+                    channelsData.map(async (channel): Promise<Channel> => {
                         try {
-                            const channelId = await getChannelIdByUsername(username);
-
-                            if (!channelId) {
-                                return channel;
-                            }
-
                             const [channelInfo, popularVideos] = await Promise.all([
-                                getChannelInfo(channelId),
-                                getPopularVideos(channelId),
+                                getChannelInfo(channel.channelId),
+                                getPopularVideos(channel.channelId),
                             ]);
 
                             if (!channelInfo) {
-                                return channel;
+                                return { ...channel, ...EMPTY_CHANNEL_STATE };
                             }
 
                             return {
                                 ...channel,
-                                channelId,
                                 channelInfo,
                                 profileImage: channelInfo.thumbnails?.high?.url || '/default-channel.jpg',
                                 videoCount: parseInt(channelInfo.statistics?.videoCount || '0'),
@@ -205,7 +109,7 @@ const Channels: React.FC = () => {
                             };
                         } catch (error) {
                             console.error(`Error processing channel ${channel.name}:`, error);
-                            return channel;
+                            return { ...channel, ...EMPTY_CHANNEL_STATE };
                         }
                     }),
                 );

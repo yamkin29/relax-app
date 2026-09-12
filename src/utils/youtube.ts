@@ -24,10 +24,6 @@ export const transformChannelResponse = (data: YouTubeApiResponse): ChannelInfo 
     };
 };
 
-export const validateYouTubeUsername = (username: string): boolean => {
-    return /^[a-zA-Z0-9_-]{3,30}$/.test(username);
-};
-
 export const validateYouTubeChannelId = (channelId: string): boolean => {
     return /^UC[a-zA-Z0-9_-]{22}$/.test(channelId);
 };
