@@ -32,7 +32,7 @@ const eslintConfig = [
       "@typescript-eslint/no-explicit-any": "warn",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": ["error", { allow: ["error"] }],
       "prettier/prettier": ["error", {}, { usePrettierrc: true }]
     },
   },

@@ -23,29 +23,19 @@ const getUsernameFromUrl = (url: string): string | null => {
         const urlObj = new URL(url);
         const pathParts = urlObj.pathname.split('/').filter(Boolean);
 
-        console.warn('Parsing URL:', {
-            url,
-            pathParts,
-            hasAt: url.includes('@'),
-        });
-
         if (url.includes('@')) {
             const username = pathParts[0].replace('@', '');
-            console.warn('Extracted @username:', username);
             return username;
         }
 
         if (pathParts[0] === 'channel' && pathParts[1]?.startsWith('UC')) {
-            console.warn('Extracted channel ID:', pathParts[1]);
             return pathParts[1];
         }
 
         if (pathParts[0] === 'c') {
-            console.warn('Extracted /c/ username:', pathParts[1]);
             return pathParts[1];
         }
 
-        console.warn('No valid username or channel ID found in URL');
         return null;
     } catch (error) {
         console.error('Invalid YouTube URL:', url, error);
@@ -183,39 +173,25 @@ const Channels: React.FC = () => {
 
                 const updatedChannels = await Promise.all(
                     channelsData.map(async (channel) => {
-                        console.warn(`Starting to process channel: ${channel.name}`);
                         const username = getUsernameFromUrl(channel.youtubeUrl);
-                        console.warn(`Processing channel ${channel.name}:`, {
-                            url: channel.youtubeUrl,
-                            extractedUsername: username,
-                        });
 
                         if (!username) {
-                            console.warn(`No username found for channel ${channel.name}`);
                             return channel;
                         }
 
                         try {
-                            console.warn(`Attempting to get channel ID for ${channel.name} with username: ${username}`);
                             const channelId = await getChannelIdByUsername(username);
-                            console.warn(`Channel ID for ${channel.name}:`, channelId);
 
                             if (!channelId) {
-                                console.warn(`No channel ID found for ${channel.name}`);
                                 return channel;
                             }
 
-                            console.warn(`Fetching channel info and popular videos for ${channel.name}`);
                             const [channelInfo, popularVideos] = await Promise.all([
                                 getChannelInfo(channelId),
                                 getPopularVideos(channelId),
                             ]);
 
-                            console.warn(`Channel info for ${channel.name}:`, channelInfo);
-                            console.warn(`Popular videos for ${channel.name}:`, popularVideos);
-
                             if (!channelInfo) {
-                                console.warn(`No channel info found for ${channel.name}`);
                                 return channel;
                             }
 
