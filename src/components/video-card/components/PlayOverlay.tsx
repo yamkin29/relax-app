@@ -1,6 +1,6 @@
 import React from 'react';
-import { STYLES } from '@/components/videoCard/constants/videoCard';
-import PlayIcon from '@/components/videoCard/components/PlayIcon';
+import { STYLES } from '@/components/video-card/constants/video-card';
+import PlayIcon from '@/components/video-card/components/PlayIcon';
 import RutubeIcon from '@/components/ui/icons/RutubeIcon';
 
 interface PlayOverlayProps {

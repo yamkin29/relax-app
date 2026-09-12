@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import SearchAndSortControls from './components/SearchAndSortControls';
 import ActiveFilters from './components/ActiveFilters';
 import VideoGridContent from './components/VideoGridContent';
-import { RawVideo, SortOption, Video } from '@/components/videoGrid/types/video';
+import { RawVideo, SortOption, Video } from '@/components/video-grid/types/video';
 
 const videos: Video[] = (rawVideos as RawVideo[]).map((video) => ({
     ...video,

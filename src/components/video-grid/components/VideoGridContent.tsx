@@ -1,5 +1,5 @@
-import VideoCard from '../../videoCard/VideoCard';
-import { Video } from '@/components/videoGrid/types/video';
+import VideoCard from '../../video-card/VideoCard';
+import { Video } from '@/components/video-grid/types/video';
 
 interface VideoGridContentProps {
     videos: Video[];

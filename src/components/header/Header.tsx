@@ -1,38 +1,25 @@
 'use client';
 import React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { HEADER_TEXTS, STYLES } from '@/components/header/constants/header';
 import NavLink from '@/components/header/components/NavLink';
 import RutubeLink from '@/components/header/components/RutubeLink';
 
 const Header: React.FC = () => {
-    const router = useRouter();
     const pathname = usePathname();
-
-    const handleVideosClick = () => {
-        router.push('/videos');
-    };
-
-    const handleChannelsClick = () => {
-        router.push('/channels');
-    };
-
-    const handleAboutClick = () => {
-        router.push('/about');
-    };
 
     return (
         <header className={STYLES.header}>
             <div className={STYLES.container}>
                 <div className={STYLES.nav}>
                     <nav className={STYLES.navLinks}>
-                        <NavLink isActive={pathname === '/videos'} onClick={handleVideosClick}>
+                        <NavLink href="/videos" isActive={pathname === '/videos'}>
                             {HEADER_TEXTS.VIDEOS}
                         </NavLink>
-                        <NavLink isActive={pathname === '/channels'} onClick={handleChannelsClick}>
+                        <NavLink href="/channels" isActive={pathname === '/channels'}>
                             {HEADER_TEXTS.CHANNELS}
                         </NavLink>
-                        <NavLink isActive={pathname === '/about'} onClick={handleAboutClick}>
+                        <NavLink href="/about" isActive={pathname === '/about'}>
                             {HEADER_TEXTS.ABOUT}
                         </NavLink>
                     </nav>

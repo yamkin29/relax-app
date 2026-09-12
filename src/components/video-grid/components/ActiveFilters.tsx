@@ -1,4 +1,4 @@
-import { categories } from '@/components/videoGrid/constants/video';
+import { categories } from '@/components/video-grid/constants/video';
 
 interface ActiveFiltersProps {
     selectedCategory: string;

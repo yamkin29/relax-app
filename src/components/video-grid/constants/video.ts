@@ -1,4 +1,4 @@
-import { Category, SortOptionConfig } from '@/components/videoGrid/types/video';
+import { Category, SortOptionConfig } from '@/components/video-grid/types/video';
 
 export const categories: Category[] = [
     { id: 'all', name: 'All Videos', icon: '🎥' },

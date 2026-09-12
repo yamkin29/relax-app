@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { formatDate, formatViewCount } from '@/lib/format';
-import { STYLES } from '@/components/videoCard/constants/videoCard';
+import { STYLES } from '@/components/video-card/constants/video-card';
 import { Channel } from './types';
 
 interface ChannelCardProps {

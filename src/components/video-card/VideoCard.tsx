@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { STYLES } from '@/components/videoCard/constants/videoCard';
-import PlayOverlay from '@/components/videoCard/components/PlayOverlay';
+import { STYLES } from '@/components/video-card/constants/video-card';
+import PlayOverlay from '@/components/video-card/components/PlayOverlay';
 import VideoModal from '@/components/video-modal/VideoModal';
 import RutubeModal from '@/components/rutube-modal/RutubeModal';
 

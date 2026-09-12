@@ -1,4 +1,4 @@
-import VideoGrid from '@/components/videoGrid/VideoGrid';
+import VideoGrid from '@/components/video-grid/VideoGrid';
 
 export default function VideosPage() {
     return (

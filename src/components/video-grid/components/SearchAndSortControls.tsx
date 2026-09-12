@@ -1,5 +1,5 @@
-import { SortOption } from '@/components/videoGrid/types/video';
-import { sortOptions } from '@/components/videoGrid/constants/video';
+import { SortOption } from '@/components/video-grid/types/video';
+import { sortOptions } from '@/components/video-grid/constants/video';
 
 interface SearchAndSortControlsProps {
     searchQuery: string;
