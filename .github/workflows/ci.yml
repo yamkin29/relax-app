@@ -31,10 +31,8 @@ jobs:
       - name: Format check
         run: npm run format:check
 
-      # Supply-chain скан отключён до обновления зависимостей (задача 9.5):
-      # единственный error сейчас — уязвимые версии next/react в deps.
       - name: React Doctor
-        run: npx -y react-doctor@0.9.14 --no-supply-chain --blocking error --no-telemetry
+        run: npx -y react-doctor@0.9.14 --blocking error --no-telemetry
 
       - name: Dependency audit (advisory, до задачи 9.5)
         run: npm audit --audit-level=high
