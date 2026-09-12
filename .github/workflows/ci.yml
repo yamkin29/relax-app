@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Format check
+        run: npm run format:check
+
+      # Supply-chain скан отключён до обновления зависимостей (задача 9.5):
+      # единственный error сейчас — уязвимые версии next/react в deps.
+      - name: React Doctor
+        run: npx -y react-doctor@0.9.14 --no-supply-chain --blocking error --no-telemetry
+
+      - name: Dependency audit (advisory, до задачи 9.5)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Production build
+        run: npm run build
