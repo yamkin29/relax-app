@@ -48,14 +48,16 @@ Relax App - это современное веб-приложение, созд�
    npm install
    ```
 
-3. Создайте файл с данными:
-   - Скопируйте `videos.example.json` в `src/data/videos.json`
-   - Заполните файл своими данными
+3. Настройте переменные окружения:
+   - Скопируйте `.env.example` в `.env`
+   - Вставьте свой ключ YouTube Data API v3 в `YOUTUBE_API_KEY` (получить: [Google Cloud Console](https://console.cloud.google.com/) → включите YouTube Data API v3 → Credentials → API key)
 
 4. Запустите приложение:
    ```bash
    npm run dev
    ```
+
+> Коллекция видео лежит в `src/data/videos.json` — можно пополнять своими данными (нужны `title`, `youtubeId`, опционально `rutubeId`, `category`, `tags`).
 
 ## 📝 Структура проекта
 
