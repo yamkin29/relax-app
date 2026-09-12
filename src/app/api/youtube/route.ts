@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
-import { YOUTUBE_API_KEY } from '@/constants/youtube';
+import { YOUTUBE_API_KEY, YOUTUBE_REVALIDATE_SECONDS } from '@/constants/youtube';
 import { YOUTUBE_API_ENDPOINTS, YOUTUBE_API_PARTS, YOUTUBE_API_ERROR_MESSAGES } from '@/constants/youtube';
 import { buildYouTubeApiUrl, transformChannelResponse, validateYouTubeChannelId } from '@/utils/youtube';
 import { YouTubeApiResponse, YouTubeVideosResponse } from '@/types/youtube';
+
+const FETCH_OPTIONS = { next: { revalidate: YOUTUBE_REVALIDATE_SECONDS } } as const;
+
+interface VideoStatisticsItem {
+    id: string;
+    statistics?: { viewCount: string };
+}
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -25,37 +32,34 @@ export async function GET(request: Request) {
                     key: YOUTUBE_API_KEY,
                 });
 
-                const searchResponse = await fetch(searchUrl);
+                const searchResponse = await fetch(searchUrl, FETCH_OPTIONS);
                 const searchData: YouTubeVideosResponse = await searchResponse.json();
 
                 if (!searchData.items || searchData.items.length === 0) {
                     return NextResponse.json({ error: 'No videos found' }, { status: 404 });
                 }
 
-                const videosWithStats = await Promise.all(
-                    searchData.items.map(async (video) => {
-                        const statsUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.VIDEOS, {
-                            part: YOUTUBE_API_PARTS.STATISTICS,
-                            id: video.id.videoId,
-                            key: YOUTUBE_API_KEY,
-                        });
+                const statsUrl = buildYouTubeApiUrl(YOUTUBE_API_ENDPOINTS.VIDEOS, {
+                    part: YOUTUBE_API_PARTS.STATISTICS,
+                    id: searchData.items.map((video) => video.id.videoId).join(','),
+                    key: YOUTUBE_API_KEY,
+                });
 
-                        const statsResponse = await fetch(statsUrl);
-                        const statsData = await statsResponse.json();
+                const statsResponse = await fetch(statsUrl, FETCH_OPTIONS);
+                const statsData: { items?: VideoStatisticsItem[] } = await statsResponse.json();
+                const statsById = new Map((statsData.items ?? []).map((item) => [item.id, item]));
 
-                        return {
-                            id: video.id.videoId,
-                            title: video.snippet.title,
-                            thumbnail:
-                                video.snippet.thumbnails.maxres?.url ||
-                                video.snippet.thumbnails.high?.url ||
-                                video.snippet.thumbnails.medium?.url ||
-                                video.snippet.thumbnails.default?.url,
-                            viewCount: statsData.items[0]?.statistics?.viewCount || '0',
-                            publishedAt: video.snippet.publishedAt,
-                        };
-                    }),
-                );
+                const videosWithStats = searchData.items.map((video) => ({
+                    id: video.id.videoId,
+                    title: video.snippet.title,
+                    thumbnail:
+                        video.snippet.thumbnails.maxres?.url ||
+                        video.snippet.thumbnails.high?.url ||
+                        video.snippet.thumbnails.medium?.url ||
+                        video.snippet.thumbnails.default?.url,
+                    viewCount: statsById.get(video.id.videoId)?.statistics?.viewCount || '0',
+                    publishedAt: video.snippet.publishedAt,
+                }));
 
                 return NextResponse.json({ videos: videosWithStats });
             }
@@ -66,7 +70,7 @@ export async function GET(request: Request) {
                 key: YOUTUBE_API_KEY,
             });
 
-            const response = await fetch(url);
+            const response = await fetch(url, FETCH_OPTIONS);
             const data: YouTubeApiResponse = await response.json();
 
             const channelInfo = transformChannelResponse(data);

@@ -1,6 +1,10 @@
 export const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
 export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
 
+// Сутки: каталог каналов меняется редко, ответ googleapis кэшируется на сервере,
+// чтобы квота не тратилась на каждого посетителя.
+export const YOUTUBE_REVALIDATE_SECONDS = 60 * 60 * 24;
+
 export const YOUTUBE_API_ENDPOINTS = {
     CHANNELS: '/channels',
     SEARCH: '/search',
