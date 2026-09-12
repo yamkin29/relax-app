@@ -29,9 +29,8 @@ export const formatLastUpdated = (timestamp: number): string => {
     });
 };
 
-export const formatTimeUntilExpiry = (timestamp: number): string => {
+export const formatTimeUntilExpiry = (timestamp: number, now: number = Date.now()): string => {
     const expiryTime = timestamp + 24 * 60 * 60 * 1000; // 24 hours from timestamp
-    const now = Date.now();
     const timeLeft = expiryTime - now;
 
     const hours = Math.floor(timeLeft / (60 * 60 * 1000));

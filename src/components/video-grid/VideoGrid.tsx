@@ -6,6 +6,7 @@ import SearchAndSortControls from './components/SearchAndSortControls';
 import ActiveFilters from './components/ActiveFilters';
 import VideoGridContent from './components/VideoGridContent';
 import { RawVideo, SortOption, Video } from '@/components/video-grid/types/video';
+import { filterAndSortVideos } from '@/lib/videoFiltering';
 
 const videos: Video[] = (rawVideos as RawVideo[]).map((video) => ({
     ...video,
@@ -13,8 +14,6 @@ const videos: Video[] = (rawVideos as RawVideo[]).map((video) => ({
     link: `https://www.youtube.com/watch?v=${video.youtubeId}`,
     rutubeLink: video.rutubeId ? `https://rutube.ru/video/${video.rutubeId}/` : undefined,
 }));
-
-const collator = new Intl.Collator('en-US', { numeric: true, sensitivity: 'base' });
 
 const VideoGrid = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -25,29 +24,16 @@ const VideoGrid = () => {
 
     const allTags = useMemo(() => Array.from(new Set(videos.flatMap((video) => video.tags))), []);
 
-    const filteredSortedVideos = useMemo(() => {
-        return videos
-            .filter(
-                (video) =>
-                    (selectedCategory === 'all' || video.category === selectedCategory) &&
-                    video.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-                    (selectedTags.length === 0 || selectedTags.every((tag) => video.tags.includes(tag))),
-            )
-            .sort((a, b) => {
-                switch (sortBy) {
-                    case 'title-asc':
-                        return collator.compare(a.title, b.title);
-                    case 'title-desc':
-                        return collator.compare(b.title, a.title);
-                    case 'category-asc':
-                        return collator.compare(a.category, b.category);
-                    case 'category-desc':
-                        return collator.compare(b.category, a.category);
-                    default:
-                        return 0;
-                }
-            });
-    }, [selectedCategory, searchQuery, selectedTags, sortBy]);
+    const filteredSortedVideos = useMemo(
+        () =>
+            filterAndSortVideos(videos, {
+                category: selectedCategory,
+                query: searchQuery,
+                tags: selectedTags,
+                sortBy,
+            }),
+        [selectedCategory, searchQuery, selectedTags, sortBy],
+    );
 
     const toggleTag = (tag: string) => {
         setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
