@@ -38,10 +38,6 @@ const Header: React.FC = () => {
                     </nav>
                     <div className={STYLES.actions}>
                         <RutubeIcon />
-                        {/* Temporarily hidden until implementation is ready
-                        <ActionButton>{HEADER_TEXTS.SETTINGS}</ActionButton>
-                        <ActionButton variant="primary">{HEADER_TEXTS.LOGIN}</ActionButton>
-                        */}
                     </div>
                 </div>
             </div>
