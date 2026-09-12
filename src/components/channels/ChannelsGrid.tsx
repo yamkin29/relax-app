@@ -23,6 +23,40 @@ const fetchChannel = async (channel: RawChannel): Promise<Channel> => {
     };
 };
 
+interface LoadResult {
+    channels: Channel[];
+    fromCache: boolean;
+    updatedAt: number;
+}
+
+// Чистый лоадер без setState: компонент сам решает, когда обновлять состояние.
+const loadChannels = async (): Promise<LoadResult> => {
+    const cachedData = cacheUtils.get<Channel[]>(cacheUtils.keys.CHANNELS);
+
+    if (cachedData) {
+        // записи из старого кэша без данных канала помечаем как сбойные — для них будет retry
+        return {
+            channels: cachedData.data.map((channel) => ({ ...channel, failed: !channel.channelInfo })),
+            fromCache: true,
+            updatedAt: cachedData.timestamp,
+        };
+    }
+
+    const channels = await Promise.all(
+        (rawChannels as RawChannel[]).map(async (channel) => {
+            try {
+                return await fetchChannel(channel);
+            } catch (error) {
+                console.error(`Error processing channel ${channel.name}:`, error);
+                return { ...channel, failed: true, ...EMPTY_CHANNEL_STATE };
+            }
+        }),
+    );
+
+    cacheUtils.set(cacheUtils.keys.CHANNELS, channels);
+    return { channels, fromCache: false, updatedAt: Date.now() };
+};
+
 const ChannelsGrid: React.FC = () => {
     const [channels, setChannels] = useState<Channel[]>([]);
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -31,48 +65,49 @@ const ChannelsGrid: React.FC = () => {
     const [lastUpdated, setLastUpdated] = useState<number | null>(null);
     const [isFromCache, setIsFromCache] = useState(false);
 
-    const loadChannels = useCallback(async () => {
-        setLoading(true);
-        setFailed(false);
-
+    const load = useCallback(async () => {
         try {
-            const cachedData = cacheUtils.get<Channel[]>(cacheUtils.keys.CHANNELS);
-
-            if (cachedData) {
-                // записи из старого кэша без данных канала помечаем как сбойные — для них будет retry
-                setChannels(cachedData.data.map((channel) => ({ ...channel, failed: !channel.channelInfo })));
-                setLastUpdated(cachedData.timestamp);
-                setIsFromCache(true);
-                setLoading(false);
-                return;
-            }
-
-            const updatedChannels = await Promise.all(
-                (rawChannels as RawChannel[]).map(async (channel) => {
-                    try {
-                        return await fetchChannel(channel);
-                    } catch (error) {
-                        console.error(`Error processing channel ${channel.name}:`, error);
-                        return { ...channel, failed: true, ...EMPTY_CHANNEL_STATE };
-                    }
-                }),
-            );
-
-            cacheUtils.set(cacheUtils.keys.CHANNELS, updatedChannels);
-            setChannels(updatedChannels);
-            setLastUpdated(Date.now());
-            setIsFromCache(false);
+            const result = await loadChannels();
+            setChannels(result.channels);
+            setLastUpdated(result.updatedAt);
+            setIsFromCache(result.fromCache);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching channel data:', error);
             setFailed(true);
-        } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        void loadChannels();
-    }, [loadChannels]);
+        let ignore = false;
+        void (async () => {
+            try {
+                const result = await loadChannels();
+                if (!ignore) {
+                    setChannels(result.channels);
+                    setLastUpdated(result.updatedAt);
+                    setIsFromCache(result.fromCache);
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Error fetching channel data:', error);
+                if (!ignore) {
+                    setFailed(true);
+                    setLoading(false);
+                }
+            }
+        })();
+        return () => {
+            ignore = true;
+        };
+    }, []);
+
+    const retryAll = async () => {
+        setLoading(true);
+        setFailed(false);
+        await load();
+    };
 
     const retryChannel = async (retryTarget: Channel) => {
         // channelId берём из данных, а не из состояния: если id починили в channels.json,
@@ -100,7 +135,7 @@ const ChannelsGrid: React.FC = () => {
                 <p className="text-white mb-4">Something went wrong while loading channels.</p>
                 <button
                     type="button"
-                    onClick={() => void loadChannels()}
+                    onClick={() => void retryAll()}
                     className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors"
                 >
                     Retry
