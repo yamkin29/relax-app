@@ -57,7 +57,7 @@ Relax App - это современное веб-приложение, созд�
    npm run dev
    ```
 
-> Коллекция видео лежит в `src/data/videos.json` — можно пополнять своими данными (нужны `title`, `youtubeId`, опционально `rutubeId`, `category`, `tags`).
+> Коллекция видео лежит в `src/data/videos.json` — можно пополнять своими данными (нужны `title`, `youtubeId`, `category`, `tags`).
 
 ## 📝 Структура проекта
 

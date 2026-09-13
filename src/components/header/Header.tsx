@@ -3,7 +3,6 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { HEADER_TEXTS, STYLES } from '@/components/header/constants/header';
 import NavLink from '@/components/header/components/NavLink';
-import RutubeLink from '@/components/header/components/RutubeLink';
 
 const Header: React.FC = () => {
     const pathname = usePathname();
@@ -23,9 +22,6 @@ const Header: React.FC = () => {
                             {HEADER_TEXTS.ABOUT}
                         </NavLink>
                     </nav>
-                    <div className={STYLES.actions}>
-                        <RutubeLink />
-                    </div>
                 </div>
             </div>
         </header>

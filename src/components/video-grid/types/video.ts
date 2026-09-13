@@ -1,7 +1,6 @@
 export interface RawVideo {
     title: string;
     youtubeId: string;
-    rutubeId?: string;
     category: string;
     tags: string[];
 }
@@ -9,7 +8,6 @@ export interface RawVideo {
 export interface Video extends RawVideo {
     thumbnail: string;
     link: string;
-    rutubeLink?: string;
 }
 
 export type SortOption = 'title-asc' | 'title-desc' | 'category-asc' | 'category-desc';

@@ -14,13 +14,7 @@ const VideoGridContent = ({ videos }: VideoGridContentProps) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {videos.map((video) => (
-                    <VideoCard
-                        key={video.youtubeId}
-                        thumbnail={video.thumbnail}
-                        link={video.link}
-                        rutubeLink={video.rutubeLink}
-                        title={video.title}
-                    />
+                    <VideoCard key={video.youtubeId} thumbnail={video.thumbnail} link={video.link} title={video.title} />
                 ))}
             </div>
 

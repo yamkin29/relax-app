@@ -4,34 +4,22 @@ import Image from 'next/image';
 import { STYLES } from '@/components/video-card/constants/video-card';
 import PlayOverlay from '@/components/video-card/components/PlayOverlay';
 import VideoModal from '@/components/video-modal/VideoModal';
-import RutubeModal from '@/components/rutube-modal/RutubeModal';
 
 interface VideoCardProps {
     thumbnail: string;
     link: string;
-    rutubeLink?: string;
     title?: string;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, rutubeLink, title }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, title }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isRutubeModalOpen, setIsRutubeModalOpen] = useState(false);
 
     const videoId = link.split('v=')[1]?.split('&')[0];
-    const rutubeId = rutubeLink?.split('/video/')[1]?.replace('/', '');
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
         if (videoId) {
             setIsModalOpen(true);
-        }
-    };
-
-    const handleRutubeClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (rutubeId) {
-            setIsRutubeModalOpen(true);
         }
     };
 
@@ -48,7 +36,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, rutubeLink, titl
                             className={STYLES.card.image}
                             priority={false}
                         />
-                        <PlayOverlay onRutubeClick={rutubeId ? handleRutubeClick : undefined} />
+                        <PlayOverlay />
                     </div>
                     {title && (
                         <div className={STYLES.card.title.container}>
@@ -58,7 +46,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ thumbnail, link, rutubeLink, titl
                 </div>
             </a>
             {videoId && <VideoModal videoId={videoId} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
-            {rutubeId && <RutubeModal videoId={rutubeId} isOpen={isRutubeModalOpen} onClose={() => setIsRutubeModalOpen(false)} />}
         </>
     );
 };
