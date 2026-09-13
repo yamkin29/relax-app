@@ -1,8 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
-
-const PlayIcon: React.FC = () => <Image src="/youtube-color-svgrepo-com.svg" alt="Youtube" width={24} height={24} className="w-6 h-6" />;
-
-PlayIcon.displayName = 'PlayIcon';
-
-export default React.memo(PlayIcon);
+export default function PlayIcon() {
+    return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="m9 5 11 7-11 7z" />
+        </svg>
+    );
+}

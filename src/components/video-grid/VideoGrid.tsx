@@ -18,7 +18,7 @@ const VideoGrid = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState<SortOption>('title-asc');
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const allTags = useMemo(() => Array.from(new Set(videos.flatMap((video) => video.tags))), []);
@@ -44,7 +44,7 @@ const VideoGrid = () => {
     };
 
     return (
-        <div className="flex relative">
+        <div className="explore-layout">
             <Sidebar
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
@@ -55,8 +55,13 @@ const VideoGrid = () => {
                 onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
             />
 
-            <div className={`flex-1 p-4 transition-all duration-300 ${isSidebarOpen ? 'md:ml-80' : 'ml-0'}`}>
-                <div className="mt-12 md:mt-0">
+            <div className="explore-content">
+                <div>
+                    <div className="intro">
+                        <div className="eyebrow">YOUR EVERYDAY ESCAPE</div>
+                        <h1>A moment of calm.</h1>
+                        <p>Find your atmosphere. Settle in. Let the world slow down.</p>
+                    </div>
                     <SearchAndSortControls
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}

@@ -14,16 +14,19 @@ const ActiveFilters = ({ selectedCategory, selectedTags, onClearAll }: ActiveFil
     return (
         <div className="mb-4 flex flex-wrap gap-2">
             {selectedCategory !== 'all' && (
-                <div className="px-3 py-1 bg-teal-700 text-white rounded-full text-sm">
+                <div className="px-3 py-1 bg-[var(--selected)] text-[var(--ink)] rounded-full text-sm">
                     {categories.find((c) => c.id === selectedCategory)?.name}
                 </div>
             )}
             {selectedTags.map((tag) => (
-                <div key={tag} className="px-3 py-1 bg-teal-700 text-white rounded-full text-sm">
+                <div key={tag} className="px-3 py-1 bg-[var(--selected)] text-[var(--ink)] rounded-full text-sm">
                     #{tag}
                 </div>
             ))}
-            <button onClick={onClearAll} className="px-3 py-1 bg-teal-800 text-white rounded-full text-sm hover:bg-teal-700">
+            <button
+                onClick={onClearAll}
+                className="px-3 py-1 bg-[var(--surface)] text-[var(--accent)] rounded-full text-sm hover:bg-[var(--selected)]"
+            >
                 Clear all
             </button>
         </div>

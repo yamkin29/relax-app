@@ -8,12 +8,10 @@ interface NavLinkProps {
 }
 
 const NavLink: React.FC<NavLinkProps> = React.memo(({ href, isActive, children }) => {
-    const linkClass = `font-semibold text-white hover:text-teal-200 transition-colors ${
-        isActive ? 'underline decoration-2' : 'opacity-75'
-    }`;
+    const linkClass = `nav-link ${isActive ? 'is-active' : ''}`;
 
     return (
-        <Link href={href} className={linkClass}>
+        <Link href={href} aria-current={isActive ? 'page' : undefined} className={linkClass}>
             {children}
         </Link>
     );

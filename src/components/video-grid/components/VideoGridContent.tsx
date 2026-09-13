@@ -7,18 +7,21 @@ interface VideoGridContentProps {
 
 const VideoGridContent = ({ videos }: VideoGridContentProps) => {
     return (
-        <div className="container mx-auto">
-            <div className="mb-4 text-teal-100">
-                Found {videos.length} video{videos.length !== 1 ? 's' : ''}
+        <div className="video-library">
+            <div className="library-heading" aria-live="polite">
+                <h2>Your next quiet moment</h2>
+                <span>
+                    {videos.length} video{videos.length !== 1 ? 's' : ''}
+                </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="video-grid">
                 {videos.map((video) => (
                     <VideoCard key={video.youtubeId} thumbnail={video.thumbnail} link={video.link} title={video.title} />
                 ))}
             </div>
 
-            {videos.length === 0 && <div className="text-center text-teal-100 mt-8">No videos found matching your criteria</div>}
+            {videos.length === 0 && <div className="empty-state">No videos found matching your criteria</div>}
         </div>
     );
 };

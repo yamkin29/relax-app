@@ -1,31 +1,30 @@
 'use client';
-import React from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HEADER_TEXTS, STYLES } from '@/components/header/constants/header';
-import NavLink from '@/components/header/components/NavLink';
-
-const Header: React.FC = () => {
+import NavLink from './components/NavLink';
+export default function Header() {
     const pathname = usePathname();
-
     return (
-        <header className={STYLES.header}>
-            <div className={STYLES.container}>
-                <div className={STYLES.nav}>
-                    <nav className={STYLES.navLinks}>
-                        <NavLink href="/videos" isActive={pathname === '/videos'}>
-                            {HEADER_TEXTS.VIDEOS}
-                        </NavLink>
-                        <NavLink href="/channels" isActive={pathname === '/channels'}>
-                            {HEADER_TEXTS.CHANNELS}
-                        </NavLink>
-                        <NavLink href="/about" isActive={pathname === '/about'}>
-                            {HEADER_TEXTS.ABOUT}
-                        </NavLink>
-                    </nav>
-                </div>
-            </div>
+        <header className="site-header">
+            <Link href="/videos" className="brand">
+                <svg className="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="1.2" />
+                    <path d="M6 18c4 0 4-8 8-8s2 12 6 12 2-8 6-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                <span>relax-app</span>
+            </Link>
+            <nav aria-label="Main navigation">
+                <NavLink href="/videos" isActive={pathname === '/videos'}>
+                    Explore
+                </NavLink>
+                <NavLink href="/channels" isActive={pathname === '/channels'}>
+                    Creators
+                </NavLink>
+                <NavLink href="/about" isActive={pathname === '/about'}>
+                    About
+                </NavLink>
+            </nav>
+            <span className="header-note">A little space to slow down</span>
         </header>
     );
-};
-
-export default React.memo(Header);
+}

@@ -10,7 +10,7 @@ interface ChannelCardProps {
 
 const ChannelCard = ({ channel, onPlayVideo }: ChannelCardProps) => {
     return (
-        <div className="bg-teal-900/50 rounded-lg p-6 backdrop-blur-sm">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-lg p-6 backdrop-blur-sm">
             <div className="flex items-center gap-4 mb-4">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden">
                     <Image
@@ -26,29 +26,29 @@ const ChannelCard = ({ channel, onPlayVideo }: ChannelCardProps) => {
                     />
                 </div>
                 <div>
-                    <h2 className="text-xl font-semibold text-white">{channel.name}</h2>
-                    <p className="text-teal-200">{channel.videoCount} videos</p>
+                    <h2 className="text-xl font-semibold text-[var(--ink)]">{channel.name}</h2>
+                    <p className="text-[var(--muted)]">{channel.videoCount} videos</p>
                     {channel.channelInfo && channel.channelInfo.statistics?.subscriberCount && (
-                        <p className="text-teal-300 text-sm">
+                        <p className="text-[var(--accent)] text-sm">
                             {parseInt(channel.channelInfo.statistics.subscriberCount).toLocaleString()} subscribers
                         </p>
                     )}
                 </div>
             </div>
 
-            {channel.channelInfo && <p className="text-gray-300 text-sm mb-4 line-clamp-2">{channel.channelInfo.description}</p>}
+            {channel.channelInfo && <p className="text-[var(--muted)] text-sm mb-4 line-clamp-2">{channel.channelInfo.description}</p>}
 
             <a
                 href={channel.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block mb-4 text-teal-300 hover:text-teal-200 transition-colors"
+                className="inline-block mb-4 text-[var(--accent)] hover:text-[var(--muted)] transition-colors"
             >
                 Visit YouTube Channel
             </a>
 
             <div className="mt-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Popular Videos</h3>
+                <h3 className="text-lg font-semibold text-[var(--ink)] mb-3">Popular Videos</h3>
                 <div className="grid grid-cols-2 gap-3">
                     {channel.popularVideos.map((video) => (
                         <div key={video.id}>
@@ -76,10 +76,10 @@ const ChannelCard = ({ channel, onPlayVideo }: ChannelCardProps) => {
                                 </span>
                             </button>
                             <div className="mt-2">
-                                <h4 className="text-sm font-medium text-white line-clamp-2">{video.title}</h4>
+                                <h4 className="text-sm font-medium text-[var(--ink)] line-clamp-2">{video.title}</h4>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs text-gray-400">{formatViewCount(video.viewCount)}</span>
-                                    <span className="text-xs text-gray-400">{formatDate(video.publishedAt)}</span>
+                                    <span className="text-xs text-[var(--muted)]">{formatViewCount(video.viewCount)}</span>
+                                    <span className="text-xs text-[var(--muted)]">{formatDate(video.publishedAt)}</span>
                                 </div>
                             </div>
                         </div>

@@ -126,17 +126,17 @@ const ChannelsGrid: React.FC = () => {
     };
 
     if (loading) {
-        return <div className="text-white text-center">Loading channels...</div>;
+        return <div className="text-[var(--ink)] text-center">Loading channels...</div>;
     }
 
     if (failed) {
         return (
             <div className="text-center">
-                <p className="text-white mb-4">Something went wrong while loading channels.</p>
+                <p className="text-[var(--ink)] mb-4">Something went wrong while loading channels.</p>
                 <button
                     type="button"
                     onClick={() => void retryAll()}
-                    className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors"
+                    className="px-4 py-2 bg-[var(--selected)] text-[var(--ink)] rounded-lg hover:bg-neutral-700 transition-colors"
                 >
                     Retry
                 </button>
@@ -147,11 +147,13 @@ const ChannelsGrid: React.FC = () => {
     return (
         <>
             <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-white">Ambient Content Creators</h2>
+                <h2 className="text-2xl font-bold text-[var(--ink)]">Ambient Content Creators</h2>
                 {lastUpdated && (
                     <div className="text-right">
-                        <p className="text-teal-300 text-sm">Last updated: {formatLastUpdated(lastUpdated)}</p>
-                        {isFromCache && <p className="text-teal-200 text-xs">Data will refresh in: {formatTimeUntilExpiry(lastUpdated)}</p>}
+                        <p className="text-[var(--accent)] text-sm">Last updated: {formatLastUpdated(lastUpdated)}</p>
+                        {isFromCache && (
+                            <p className="text-[var(--muted)] text-xs">Data will refresh in: {formatTimeUntilExpiry(lastUpdated)}</p>
+                        )}
                     </div>
                 )}
             </div>
@@ -160,14 +162,14 @@ const ChannelsGrid: React.FC = () => {
                     channel.failed ? (
                         <div
                             key={channel.id}
-                            className="bg-teal-900/50 rounded-lg p-6 backdrop-blur-sm flex flex-col items-center justify-center text-center gap-3"
+                            className="bg-[var(--surface)] border border-[var(--line)] rounded-lg p-6 backdrop-blur-sm flex flex-col items-center justify-center text-center gap-3"
                         >
-                            <p className="text-white font-semibold">{channel.name}</p>
-                            <p className="text-teal-200 text-sm">Failed to load channel data.</p>
+                            <p className="text-[var(--ink)] font-semibold">{channel.name}</p>
+                            <p className="text-[var(--muted)] text-sm">Failed to load channel data.</p>
                             <button
                                 type="button"
                                 onClick={() => void retryChannel(channel)}
-                                className="px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-600 transition-colors"
+                                className="px-4 py-2 bg-[var(--selected)] text-[var(--ink)] rounded-lg hover:bg-neutral-700 transition-colors"
                             >
                                 Retry
                             </button>
