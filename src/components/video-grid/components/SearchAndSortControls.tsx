@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SortOption } from '@/components/video-grid/types/video';
 import { sortOptions } from '@/components/video-grid/constants/video';
 
@@ -12,29 +14,29 @@ const SearchAndSortControls = ({ searchQuery, setSearchQuery, sortBy, setSortBy 
     return (
         <div className="search-controls">
             <div className="search-field">
-                <input
+                <Input
                     type="text"
                     placeholder="Find rain, forests, a quiet café…"
                     aria-label="Search videos"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="search-input"
+                    className="h-[46px] rounded-[9px] bg-popover px-4 text-base md:text-sm"
                 />
             </div>
 
             <div className="sort-field">
-                <select
-                    value={sortBy}
-                    aria-label="Sort videos"
-                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="sort-select"
-                >
-                    {sortOptions.map((option) => (
-                        <option key={option.id} value={option.id}>
-                            {option.name}
-                        </option>
-                    ))}
-                </select>
+                <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                    <SelectTrigger aria-label="Sort videos" className="h-[46px] rounded-[9px] bg-popover px-4">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {sortOptions.map((option) => (
+                            <SelectItem key={option.id} value={option.id}>
+                                {option.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
         </div>
     );

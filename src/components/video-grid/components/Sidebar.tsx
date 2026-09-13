@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { categories } from '../constants/video';
 interface SidebarProps {
     selectedCategory: string;
@@ -31,7 +32,8 @@ export default function Sidebar({
         categories
             .filter((c) => ids.includes(c.id))
             .map((c) => (
-                <button
+                <Button
+                    variant="ghost"
                     key={c.id}
                     aria-pressed={selectedCategory === c.id}
                     className={`category ${selectedCategory === c.id ? 'selected' : ''}`}
@@ -43,13 +45,13 @@ export default function Sidebar({
                     <span aria-hidden="true">{symbols[c.id]}</span>
                     {c.name.replace(/^[^A-Za-z]+/, '')}
                     {selectedCategory === c.id && <i aria-hidden="true" />}
-                </button>
+                </Button>
             ));
     return (
         <aside className="sidebar">
-            <button className="mobile-filter" onClick={onToggle} aria-expanded={isOpen} aria-controls="category-panel">
+            <Button variant="ghost" className="mobile-filter" onClick={onToggle} aria-expanded={isOpen} aria-controls="category-panel">
                 Browse categories <span>{isOpen ? '−' : '+'}</span>
-            </button>
+            </Button>
             <div id="category-panel" className={`sidebar-inner ${isOpen ? 'open' : ''}`}>
                 <div className="sidebar-label">YOUR SPACE</div>
                 {group(['all'])}
@@ -61,14 +63,15 @@ export default function Sidebar({
                     <summary>Explore tags {selectedTags.length > 0 && `(${selectedTags.length})`}</summary>
                     <div className="tag-list">
                         {allTags.map((tag) => (
-                            <button
+                            <Button
+                                variant="ghost"
                                 key={tag}
                                 aria-pressed={selectedTags.includes(tag)}
                                 className={selectedTags.includes(tag) ? 'selected' : ''}
                                 onClick={() => toggleTag(tag)}
                             >
                                 {tag}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 </details>
